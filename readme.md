@@ -7,6 +7,12 @@ Cryptography 1 (COMP.SEC.200)
 * Mohammad Asif Ibtehaz (asif.ibtehaz@tuni.fi)
 * Henriikka Rikala (henriikka.rikala@tuni.fi)
 
+## Code base Rule
+
+* Use <https://github.com/shepherd-06/bug-free-skinny/issues> to raise any issue, if required.
+
+* In case of merge conflict, generate a pull request in Github and we (Ibtehaz and Henriikka) will resolve the issue together.
+
 ## Project Details
 
 ### Specification
@@ -35,3 +41,6 @@ tar czf 123456_assignment3.tar.gz assignment3
 
 tar tzf 123456_assignment3.tar.gz
 ```
+
+------
+Kiitos, hyva paivanjatkoa! :)
