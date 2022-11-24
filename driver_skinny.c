@@ -35,7 +35,8 @@ static const unsigned char check[] = {
     0x85, 0x19, 0x1e, 0x7c, 0xa0, 0xcf, 0xfa, 0x9b, 0xaf, 0x15, 0xa7, 0xdf, 0x09, 0x6c, 0x94, 0x87  /* ciphertext */
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     int i;
     const unsigned char *p = NULL;
     unsigned char c[16];
@@ -45,7 +46,8 @@ int main(int argc, char *argv[]) {
     p = check;
 
     /* run all 4 KATs */
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++)
+    {
         skinny(c, p + 48, p);
         printf("%s\n", !memcmp(c, p + 64, 16) ? "PASS" : "FAIL");
         p += 80;
