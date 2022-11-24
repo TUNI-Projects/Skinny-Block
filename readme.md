@@ -4,8 +4,8 @@ Cryptography 1 (COMP.SEC.200)
 
 ## Project Members
 
-* Mohammad Asif Ibtehaz (asif.ibtehaz@tuni.fi)
-* Henriikka Rikala (henriikka.rikala@tuni.fi)
+* Mohammad Asif Ibtehaz (asif.ibtehaz@tuni.fi) (50366228)
+* Henriikka Rikala (henriikka.rikala@tuni.fi) (292055)
 
 ## Code base Rule
 
