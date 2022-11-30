@@ -53,3 +53,10 @@ dkms.conf
 
 # VSCODE File
 .VSCODE/
+
+# REMOVE MakeFile
+Makefile
+
+# Remove other stuff that I dont know anything about
+driver_skinny.dSYM/
+driver_skinny

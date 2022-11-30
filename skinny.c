@@ -23,9 +23,10 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
      * SKINNY-128-384 block cipher encryption.
      * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
      */
-    const unsigned char *key = k;
-    const unsigned char *plain_text = p;
-    const unsigned char *output = c;
+    // const unsigned char *key = k;
+    // const unsigned char *plain_text = p;
+    // const unsigned char *output = c;
+    return;
 }
 
 uint8_t subCells(uint8_t *bits)
@@ -86,6 +87,7 @@ int add_constant(int last_round[], int round_number)
     {
         current_round_array = round_49_62;
     }
+    return -1;
 }
 
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k)
@@ -94,6 +96,7 @@ int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned c
      *
      *
      */
+    return -1;
 }
 
 uint8_t shift_rows(uint8_t *matrix)
