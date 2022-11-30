@@ -42,5 +42,13 @@ tar czf 123456_assignment3.tar.gz assignment3
 tar tzf 123456_assignment3.tar.gz
 ```
 
+### How to run
+
+```bash
+make clean
+make
+./driver_skinny
+```
+
 ------
 Kiitos, hyva paivanjatkoa! :)
