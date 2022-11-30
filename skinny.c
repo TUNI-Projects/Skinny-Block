@@ -6,6 +6,7 @@
  *  Skinny Round Constants in Hexadecimal
  *  From Table 2
  */
+
 static const unsigned char round_1_16[] = {
     0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F, 0x1E, 0x3C, 0x39, 0x33, 0x27, 0x0E};
 
@@ -18,6 +19,16 @@ static const unsigned char round_33_48[] = {
 static const unsigned char round_49_62[] = {
     0x09, 0x13, 0x26, 0x0C, 0x19, 0x32, 0x25, 0x0A, 0x15, 0x2A, 0x14, 0x28, 0x10, 0x20};
 
+void rager_test(unsigned char *pointer)
+{
+    for (size_t i = 0; i < 16; i++)
+    {
+        // printf("%x\n", pointer[i]);
+        unsigned char p = pointer[i];
+        printf("%d", p);
+    }
+}
+
 void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
 {
     /**
@@ -29,90 +40,6 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     // const unsigned char *output = c;
     rager_test(key);
     return;
-}
-
-void rager_test(unsigned char *pointer)
-{
-    for (size_t i = 0; i < 16; i++)
-    {
-        printf("%u\n", pointer[i]);
-    }
-}
-
-void hex_to_bin(char *hexdec)
-{
-    /**
-     * Code copied from online (https://www.geeksforgeeks.org/program-to-convert-hexadecimal-number-to-binary/)
-     * I didn't want to write this utility func. - Ibtehaz
-     */
-
-    long int i = 0;
-
-    while (hexdec[i])
-    {
-
-        switch (hexdec[i])
-        {
-        case '0':
-            printf("0000");
-            break;
-        case '1':
-            printf("0001");
-            break;
-        case '2':
-            printf("0010");
-            break;
-        case '3':
-            printf("0011");
-            break;
-        case '4':
-            printf("0100");
-            break;
-        case '5':
-            printf("0101");
-            break;
-        case '6':
-            printf("0110");
-            break;
-        case '7':
-            printf("0111");
-            break;
-        case '8':
-            printf("1000");
-            break;
-        case '9':
-            printf("1001");
-            break;
-        case 'A':
-        case 'a':
-            printf("1010");
-            break;
-        case 'B':
-        case 'b':
-            printf("1011");
-            break;
-        case 'C':
-        case 'c':
-            printf("1100");
-            break;
-        case 'D':
-        case 'd':
-            printf("1101");
-            break;
-        case 'E':
-        case 'e':
-            printf("1110");
-            break;
-        case 'F':
-        case 'f':
-            printf("1111");
-            break;
-        default:
-            printf("\nInvalid hexadecimal digit %c",
-                   hexdec[i]);
-        }
-        i++;
-    }
 }
 
 uint8_t subCells(uint8_t *bits)
