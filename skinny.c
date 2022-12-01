@@ -33,7 +33,7 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
      * SKINNY-128-384 block cipher encryption.
      * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
      */
-    // unsigned char x = 0xdf;
+    // unsigned char x = 0x8;
     // int y = (int)x;
 
     // printf("%x\n", x);
@@ -46,7 +46,6 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *output = c;
 
     subCells(plain_text);
-    // print_stuff(plain_text);
 }
 
 unsigned char subCells(unsigned char *hex_plain_text)
@@ -58,6 +57,7 @@ unsigned char subCells(unsigned char *hex_plain_text)
      *
      *
      */
+    print_stuff(hex_plain_text);
     for (int index = 0; index < 16; index++)
     {
         char *bin[8];
@@ -185,8 +185,8 @@ void dec_to_bin(int dec, char *binary[])
      * convert decimals to binary for bitwise ops.
      * :returns char [8]
      */
-    char mid_val[8];
-    char reverse[] = {0, 0, 0, 0, 0, 0, 0, 0};
+    char mid_val[] = {'0', '0', '0', '0', '0', '0', '0', '0'};
+    char reverse[] = {'0', '0', '0', '0', '0', '0', '0', '0'};
     for (int index = 0; dec > 0; index++)
     {
         mid_val[index] = (dec % 2) + '0';
@@ -207,7 +207,7 @@ void dec_to_bin(int dec, char *binary[])
 
     // for (int i = 0; i < 8; i++)
     // {
-    //     printf("%c", binary[i]);
+    //     printf("%c ", binary[i]);
     // }
     // printf("\n");
 }
@@ -226,7 +226,7 @@ void print_stuff(unsigned char *data)
      */
     for (int i = 0; i < 16; i++)
     {
-        printf("%x ", data[i]);
+        printf("Index: %d, %x \n", i + 1, data[i]);
     }
     printf("\n");
 }

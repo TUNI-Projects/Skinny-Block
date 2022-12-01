@@ -50,5 +50,11 @@ make
 ./driver_skinny
 ```
 
+or there's a `.sh` file in the root directory, give it an execute permission (+x) and then run it. That's a bash file that basically run the above command serially.
+
+```bash
+./run.sh
+```
+
 ------
 Kiitos, hyva paivanjatkoa! :)
