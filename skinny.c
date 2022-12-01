@@ -62,10 +62,12 @@ unsigned char subCells(unsigned char *hex_plain_text)
     {
         char *bin[8];
         dec_to_bin(hex_plain_text[index], bin);
+        printf("Index: %d >> ", index + 1);
         for (int i = 0; i < 8; i++)
         {
             printf("%c", bin[i]);
         }
+        printf("\n");
     }
     printf("\n");
     int i = 0;

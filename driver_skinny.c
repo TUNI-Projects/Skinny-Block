@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
         skinny(c, p + 48, p);
         printf("%s\n", !memcmp(c, p + 64, 16) ? "PASS" : "FAIL");
         p += 80;
+        break;
     }
 
     return 0;
