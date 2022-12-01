@@ -8,7 +8,7 @@ int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned c
 uint8_t shift_rows(uint8_t *matrix);
 int *mix_col(int last_output[]);
 void print_stuff(unsigned char *data);
-void dec_to_bin(int dec, char binary[]);
+void dec_to_bin(int dec, char *binary[]);
 
 /**
  *  Skinny Round Constants in Hexadecimal
@@ -33,70 +33,65 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
      * SKINNY-128-384 block cipher encryption.
      * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
      */
-    unsigned char x = 0xdf;
-    int y = (int)x;
+    // unsigned char x = 0xdf;
+    // int y = (int)x;
 
-    printf("%x\n", x);
-    printf("%d\n", y);
-    char z[8];
-    dec_to_bin(y, z);
+    // printf("%x\n", x);
+    // printf("%d\n", y);
+    // char *z[8]; // i need a pointer to pass;
+    // dec_to_bin(y, z);
 
-    for (int i = 0; i < 8; i++)
-    {
-        printf("%c", z[i]);
-    }
-    printf("\n");
+    unsigned char *key = k;
+    unsigned char *plain_text = p;
+    unsigned char *output = c;
 
-    // unsigned char *key = k;
-    // unsigned char *plain_text = p;
-    // unsigned char *output = c;
-
-    // unsigned char *potato_1 = subCells(plain_text);
+    subCells(plain_text);
     // print_stuff(plain_text);
 }
 
-void print_stuff(unsigned char *data)
-{
-    /**
-     * Function to print random stuff
-     */
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", data[i]);
-    }
-    printf("\n");
-}
-
-unsigned char subCells(unsigned char *bits)
+unsigned char subCells(unsigned char *hex_plain_text)
 {
     /**
      * Written by Henriikka
+     * Step 1: Run the loop 16 times over the plain-text.
+     * Step 2: Convert each byte to binary.
      *
      *
      */
-    int i = 0;
-    while (i < 4)
+    for (int index = 0; index < 16; index++)
     {
-        bits[4] = bits[4] ^ ~(bits[7] | bits[6]);
-        bits[0] = bits[0] ^ ~(bits[3] | bits[2]);
-
-        if (i < 3)
+        char *bin[8];
+        dec_to_bin(hex_plain_text[index], bin);
+        for (int i = 0; i < 8; i++)
         {
-            // Bit permutation used for 3 first rounds
-            unsigned char bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
-
-            bits = bit_array;
-        }
-        else
-        {
-            // Bit permutation for last round
-            unsigned char bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
-
-            bits = bit_array;
+            printf("%c", bin[i]);
         }
     }
+    printf("\n");
+    int i = 0;
+    // while (i < 4)
+    // {
+    //     bits[4] = bits[4] ^ ~(bits[7] | bits[6]);
+    //     bits[0] = bits[0] ^ ~(bits[3] | bits[2]);
 
-    return bits;
+    //     if (i < 3)
+    //     {
+    //         // Bit permutation used for 3 first rounds
+    //         unsigned char bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
+
+    //         bits = bit_array;
+    //     }
+    //     else
+    //     {
+    //         // Bit permutation for last round
+    //         unsigned char bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
+
+    //         bits = bit_array;
+    //     }
+    // }
+
+    // return bits;
+    return 0xdf;
 }
 
 int add_constant(int last_round[], int round_number)
@@ -182,7 +177,7 @@ int *mix_col(int last_output[])
     return new_array;
 }
 
-void dec_to_bin(int dec, char binary[])
+void dec_to_bin(int dec, char *binary[])
 {
     /**
      * convert decimals to binary for bitwise ops.
@@ -202,10 +197,34 @@ void dec_to_bin(int dec, char binary[])
         reverse[8 - 1 - i] = mid_val[i];
     }
 
-    binary = reverse;
+    // put everything inside the original pointer
     for (int i = 0; i < 8; i++)
     {
-        printf("%c", binary[i]);
+        binary[i] = reverse[i];
+    }
+
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     printf("%c", binary[i]);
+    // }
+    // printf("\n");
+}
+
+/**
+ * -------
+ * Debug stuff
+ * -------
+ *
+ */
+
+void print_stuff(unsigned char *data)
+{
+    /**
+     * Function to print random stuff
+     */
+    for (int i = 0; i < 16; i++)
+    {
+        printf("%x ", data[i]);
     }
     printf("\n");
 }
