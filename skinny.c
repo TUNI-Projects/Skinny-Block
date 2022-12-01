@@ -8,7 +8,7 @@ int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned c
 uint8_t shift_rows(uint8_t *matrix);
 int *mix_col(int last_output[]);
 void print_stuff(unsigned char *data);
-char dec_to_bin(int dec);
+void dec_to_bin(int dec, char binary[]);
 
 /**
  *  Skinny Round Constants in Hexadecimal
@@ -38,7 +38,8 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
 
     printf("%x\n", x);
     printf("%d\n", y);
-    char *z = dec_to_bin(y);
+    char z[8];
+    dec_to_bin(y, z);
 
     for (int i = 0; i < 8; i++)
     {
@@ -181,30 +182,30 @@ int *mix_col(int last_output[])
     return new_array;
 }
 
-char dec_to_bin(int dec)
+void dec_to_bin(int dec, char binary[])
 {
     /**
      * convert decimals to binary for bitwise ops.
      * :returns char [8]
      */
-    char binary[8];
-    char reverse[8];
+    char mid_val[8];
+    char reverse[] = {0, 0, 0, 0, 0, 0, 0, 0};
     for (int index = 0; dec > 0; index++)
     {
-        binary[index] = (dec % 2) + '0';
+        mid_val[index] = (dec % 2) + '0';
         dec = dec / 2;
     }
 
     // reverse the order of bin in the bin array.
     for (int i = 0; i < 8; i++)
     {
-        reverse[8 - 1 - i] = binary[i];
+        reverse[8 - 1 - i] = mid_val[i];
     }
 
-    // for (int i = 0; i < 8; i++)
-    // {
-    //     printf("%c", reverse[i]);
-    // }
-    // printf("\n");
-    return reverse;
+    binary = reverse;
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%c", binary[i]);
+    }
+    printf("\n");
 }
