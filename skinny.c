@@ -2,6 +2,12 @@
 #include "skinny.h"
 #include <stdio.h>
 
+uint8_t subCells(uint8_t *bits);
+int add_constant(int last_round[], int round_number);
+int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
+uint8_t shift_rows(uint8_t *matrix);
+int *mix_col(int last_output[]);
+
 /**
  *  Skinny Round Constants in Hexadecimal
  *  From Table 2
@@ -19,16 +25,6 @@ static const unsigned char round_33_48[] = {
 static const unsigned char round_49_62[] = {
     0x09, 0x13, 0x26, 0x0C, 0x19, 0x32, 0x25, 0x0A, 0x15, 0x2A, 0x14, 0x28, 0x10, 0x20};
 
-void rager_test(unsigned char *pointer)
-{
-    for (size_t i = 0; i < 16; i++)
-    {
-        // printf("%x\n", pointer[i]);
-        unsigned char p = pointer[i];
-        printf("%d", p);
-    }
-}
-
 void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
 {
     /**
@@ -36,9 +32,14 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
      * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
      */
     unsigned char *key = k;
-    // const unsigned char *plain_text = p;
-    // const unsigned char *output = c;
-    rager_test(key);
+    unsigned char *plain_text = p;
+    unsigned char *output = c;
+
+    for (size_t i = 0; i < 16; i++)
+    {
+        printf("%x ", key[i]);
+    }
+    printf("\n");
     return;
 }
 
