@@ -9,7 +9,7 @@ Cryptography 1 (COMP.SEC.200)
 
 ## Code base Rule
 
-* Use <https://github.com/shepherd-06/bug-free-skinny/issues> to raise any issue, if required.
+* Use <https://github.com/shepherd-06/Skinny-Block/issues> to raise any issue, if required.
 
 * In case of merge conflict, generate a pull request in Github and we (Ibtehaz and Henriikka) will resolve the issue together.
 

@@ -2,11 +2,13 @@
 #include "skinny.h"
 #include <stdio.h>
 
-uint8_t subCells(uint8_t *bits);
+unsigned char subCells(unsigned char *bits);
 int add_constant(int last_round[], int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
 uint8_t shift_rows(uint8_t *matrix);
 int *mix_col(int last_output[]);
+void print_stuff(unsigned char *data);
+char dec_to_bin(int dec);
 
 /**
  *  Skinny Round Constants in Hexadecimal
@@ -31,28 +33,46 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
      * SKINNY-128-384 block cipher encryption.
      * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
      */
-    unsigned char *key = k;
-    unsigned char *plain_text = p;
-    unsigned char *output = c;
+    unsigned char x = 0xdf;
+    int y = (int)x;
 
-    for (size_t i = 0; i < 16; i++)
+    printf("%x\n", x);
+    printf("%d\n", y);
+    char *z = dec_to_bin(y);
+
+    for (int i = 0; i < 8; i++)
     {
-        printf("%x ", key[i]);
+        printf("%c", z[i]);
     }
     printf("\n");
-    return;
+
+    // unsigned char *key = k;
+    // unsigned char *plain_text = p;
+    // unsigned char *output = c;
+
+    // unsigned char *potato_1 = subCells(plain_text);
+    // print_stuff(plain_text);
 }
 
-uint8_t subCells(uint8_t *bits)
+void print_stuff(unsigned char *data)
+{
+    /**
+     * Function to print random stuff
+     */
+    for (int i = 0; i < 16; i++)
+    {
+        printf("%x ", data[i]);
+    }
+    printf("\n");
+}
+
+unsigned char subCells(unsigned char *bits)
 {
     /**
      * Written by Henriikka
      *
      *
      */
-
-    // bits = 8 bit array x_7 - x_0
-
     int i = 0;
     while (i < 4)
     {
@@ -62,14 +82,14 @@ uint8_t subCells(uint8_t *bits)
         if (i < 3)
         {
             // Bit permutation used for 3 first rounds
-            uint8_t bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
+            unsigned char bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
 
             bits = bit_array;
         }
         else
         {
             // Bit permutation for last round
-            uint8_t bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
+            unsigned char bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
 
             bits = bit_array;
         }
@@ -159,4 +179,32 @@ int *mix_col(int last_output[])
         last_output[12]};
 
     return new_array;
+}
+
+char dec_to_bin(int dec)
+{
+    /**
+     * convert decimals to binary for bitwise ops.
+     * :returns char [8]
+     */
+    char binary[8];
+    char reverse[8];
+    for (int index = 0; dec > 0; index++)
+    {
+        binary[index] = (dec % 2) + '0';
+        dec = dec / 2;
+    }
+
+    // reverse the order of bin in the bin array.
+    for (int i = 0; i < 8; i++)
+    {
+        reverse[8 - 1 - i] = binary[i];
+    }
+
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     printf("%c", reverse[i]);
+    // }
+    // printf("\n");
+    return reverse;
 }
