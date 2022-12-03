@@ -1,4 +1,5 @@
 name: C/C++ CI
+# Purpose: Just to make sure the code compiles!
 
 on:
   push:
