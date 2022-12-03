@@ -1,15 +1,17 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include "skinny.h"
-#include <stdio.h>
 
-unsigned char subCells(unsigned char *bits);
+unsigned char *subCells(unsigned char *bits);
 int add_constant(int last_round[], int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
 uint8_t shift_rows(uint8_t *matrix);
 int *mix_col(int last_output[]);
 void print_stuff(unsigned char *data);
 void dec_to_bin(int dec, char *binary[]);
-
+void print_random_stuff(char *data, int length);
+void debug();
 /**
  *  Skinny Round Constants in Hexadecimal
  *  From Table 2
@@ -46,9 +48,10 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *output = c;
 
     subCells(plain_text);
+    // debug();
 }
 
-unsigned char subCells(unsigned char *hex_plain_text)
+unsigned char *subCells(unsigned char *plain_text)
 {
     /**
      * Written by Henriikka
@@ -57,42 +60,53 @@ unsigned char subCells(unsigned char *hex_plain_text)
      *
      *
      */
-    print_stuff(hex_plain_text);
     for (int index = 0; index < 16; index++)
     {
-        char *bin[8];
-        dec_to_bin(hex_plain_text[index], bin);
-        printf("Index: %d >> ", index + 1);
-        for (int i = 0; i < 8; i++)
+        char *bits[8];
+        dec_to_bin(plain_text[index], bits);
+        // printf("Index: %d >> ", index + 1);
+        // for (int i = 0; i < 8; i++)
+        // {
+        //     // printf("%c || ", bits[4] ^ bits[7]);
+        //     int x = bits[i] - '0';
+        //     printf("%d %% ", x);
+        // }
+        // printf("\n");
+
+        for (int i = 0; i < 4; i++)
         {
-            printf("%c", bin[i]);
+            int four_four = bits[4] - '0';
+            int seven_seven = bits[7] - '0';
+            int six_six = bits[6] - '0';
+
+            int four = four_four ^ ~(seven_seven | six_six);
+            // int zero = (int)bits[0] ^ ~((int)bits[3] | (int)bits[2]);
+
+            if (i < 3)
+            {
+                // Bit permutation used for 3 first rounds
+                char *bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
+                // for (int j = 0; j < 8; j++)
+                // {
+                //     bits[j] = bit_array[j];
+                // }
+                print_random_stuff(bits, 8);
+                printf("\n----------------------");
+                printf("\n----------------------");
+                printf("\n----------------------\n");
+                // print_random_stuff(bit_array, 8);
+            }
+            else
+            {
+                // Bit permutation for last round
+                char *bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
+                // for (int j = 0; j < 8; j++)
+                // {
+                //     bits[j] = bit_array[j];
+                // }
+            }
         }
-        printf("\n");
     }
-    printf("\n");
-    int i = 0;
-    // while (i < 4)
-    // {
-    //     bits[4] = bits[4] ^ ~(bits[7] | bits[6]);
-    //     bits[0] = bits[0] ^ ~(bits[3] | bits[2]);
-
-    //     if (i < 3)
-    //     {
-    //         // Bit permutation used for 3 first rounds
-    //         unsigned char bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
-
-    //         bits = bit_array;
-    //     }
-    //     else
-    //     {
-    //         // Bit permutation for last round
-    //         unsigned char bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
-
-    //         bits = bit_array;
-    //     }
-    // }
-
-    // return bits;
     return 0xdf;
 }
 
@@ -213,11 +227,19 @@ void dec_to_bin(int dec, char *binary[])
 }
 
 /**
- * -------
+ * ---------------------
  * Debug stuff
- * -------
- *
+ * ---------------------
  */
+
+void print_random_stuff(char *data, int length)
+{
+    for (int i = 0; i < length; i++)
+    {
+        printf("Index: %d, %x \n", i + 1, data[i]);
+    }
+    printf("\n");
+}
 
 void print_stuff(unsigned char *data)
 {
@@ -229,4 +251,12 @@ void print_stuff(unsigned char *data)
         printf("Index: %d, %x \n", i + 1, data[i]);
     }
     printf("\n");
+}
+
+void debug()
+{
+    int x = 10;
+    char z = '1';
+
+    printf('%x \n', x); // segmentation fault, why?
 }
