@@ -9,7 +9,7 @@ int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned c
 uint8_t shift_rows(uint8_t *matrix);
 int *mix_col(int last_output[]);
 void print_stuff(unsigned char *data);
-void dec_to_bin(int dec, char *binary[]);
+void dec_to_bin(int dec, unsigned char binary[]);
 void print_random_stuff(char *data, int length);
 void debug();
 /**
@@ -62,35 +62,35 @@ unsigned char *subCells(unsigned char *plain_text)
      */
     for (int index = 0; index < 16; index++)
     {
-        char *bits[8];
+        unsigned char bits[9];
         dec_to_bin(plain_text[index], bits);
-        // printf("Index: %d >> ", index + 1);
-        // for (int i = 0; i < 8; i++)
-        // {
-        //     // printf("%c || ", bits[4] ^ bits[7]);
-        //     int x = bits[i] - '0';
-        //     printf("%d %% ", x);
-        // }
-        // printf("\n");
-
+        // upto this code works. I think! 
         for (int i = 0; i < 4; i++)
         {
-            int four_four = bits[4] - '0';
-            int seven_seven = bits[7] - '0';
-            int six_six = bits[6] - '0';
+            unsigned int four = bits[4] - '0';
+            unsigned int seven = bits[7] - '0';
+            unsigned int six = bits[6] - '0';
 
-            int four = four_four ^ ~(seven_seven | six_six);
-            // int zero = (int)bits[0] ^ ~((int)bits[3] | (int)bits[2]);
+            four = four ^ ~(seven | six);
+
+            printf("%d \n", four);
+            unsigned int zero = bits[0] - '0';
+            unsigned int three = bits[3] - '0';
+            unsigned int two = bits[2] - '0';
+
+            zero = zero ^ ~(three | two);
+
+            // printf("Index: %d | four: %d || zero: %d\n", index, four, zero);
 
             if (i < 3)
             {
                 // Bit permutation used for 3 first rounds
-                char *bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
+                // char *bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
                 // for (int j = 0; j < 8; j++)
                 // {
                 //     bits[j] = bit_array[j];
                 // }
-                print_random_stuff(bits, 8);
+                // print_random_stuff(bits, 8);
                 printf("\n----------------------");
                 printf("\n----------------------");
                 printf("\n----------------------\n");
@@ -99,13 +99,16 @@ unsigned char *subCells(unsigned char *plain_text)
             else
             {
                 // Bit permutation for last round
-                char *bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
+                printf("Else");
+                // char *bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
                 // for (int j = 0; j < 8; j++)
                 // {
                 //     bits[j] = bit_array[j];
                 // }
             }
+            break;
         }
+        break;
     }
     return 0xdf;
 }
@@ -193,14 +196,14 @@ int *mix_col(int last_output[])
     return new_array;
 }
 
-void dec_to_bin(int dec, char *binary[])
+void dec_to_bin(int dec, unsigned char binary[])
 {
     /**
      * convert decimals to binary for bitwise ops.
      * :returns char [8]
      */
-    char mid_val[] = {'0', '0', '0', '0', '0', '0', '0', '0'};
-    char reverse[] = {'0', '0', '0', '0', '0', '0', '0', '0'};
+    char mid_val[] = {'0', '0', '0', '0', '0', '0', '0', '0', '0'};
+    char reverse[] = {'0', '0', '0', '0', '0', '0', '0', '0', '0'};
     for (int index = 0; dec > 0; index++)
     {
         mid_val[index] = (dec % 2) + '0';
@@ -208,13 +211,13 @@ void dec_to_bin(int dec, char *binary[])
     }
 
     // reverse the order of bin in the bin array.
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 9; i++)
     {
-        reverse[8 - 1 - i] = mid_val[i];
+        reverse[9 - 1 - i] = mid_val[i];
     }
 
     // put everything inside the original pointer
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 9; i++)
     {
         binary[i] = reverse[i];
     }
