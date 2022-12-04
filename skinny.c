@@ -382,4 +382,9 @@ void debug()
     char z = '1';
 
     printf('%x \n', x); // segmentation fault, why?
+
+    // unsigned char new_hex[2];
+
+    // strcat(new_hex, hex); <<< this function copy string.
+    // printf("Final destination string : |%s|", new_hex);
 }
