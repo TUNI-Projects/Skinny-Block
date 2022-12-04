@@ -7,7 +7,7 @@ unsigned char *subCells(unsigned char *bits);
 int add_constant(int last_round[], int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
 uint8_t shift_rows(uint8_t *matrix);
-int *mix_col(int last_output[]);
+int *mix_col(unsigned char last_output[]);
 void print_stuff(unsigned char *data);
 void dec_to_bin(int dec, unsigned int binary[]);
 void print_random_stuff(int data[], int length);
@@ -47,7 +47,8 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *plain_text = p;
     unsigned char *output = c;
 
-    subCells(plain_text);
+    // subCells(plain_text);
+    mix_col(plain_text);
     // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
     // debug();
 }
@@ -159,19 +160,38 @@ uint8_t shift_rows(uint8_t *matrix)
     return shifted;
 }
 
-int *mix_col(int last_output[])
+int *mix_col(unsigned char last_output[])
 {
     /**
      * Written by Ibtehaz
-     * Convert the last_output into a linear array, of binary, in chunks of 8
-     * DEV Comment
-     * last_output = one dimensional array from the previous round.
-     * We need to multiply it cell by cell and generate a new_array?
+     * ** comment **
+     * For individual function, I am gonna test it against the original hex value and adding it against the array.
+     * I will do integration testing against the full system later
+     *
+     * This function works with hex summation.
+     * the input has to be unsigned char and output currently is in decimal.
+     * ** comment **
      */
+    // Debug stuff
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    for (int i = 0; i < 16; i++)
+    {
+        printf("Index: %d, %x \n", i + 1, last_output[i]);
+    }
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    // Debug stuff
+
     int fixed_array[16] = {1, 0, 1, 1,
                            1, 0, 0, 0,
                            0, 1, 1, 0,
                            1, 0, 1, 0};
+    
+    printf("%x --- %x --- %x \n", last_output[0], last_output[1], last_output[3]);
+
     int new_array[16] = {
         last_output[0] + last_output[1] + last_output[3],
         last_output[2],
@@ -190,6 +210,14 @@ int *mix_col(int last_output[])
         last_output[14] + last_output[14] + last_output[15],
         last_output[12]};
 
+    for (int i = 0; i < 16; i++)
+    {
+        printf("Index: %d, %d \n", i + 1, new_array[i]);
+    }
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
     return new_array;
 }
 
