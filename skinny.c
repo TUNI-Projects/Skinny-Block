@@ -6,7 +6,7 @@
 unsigned char *subCells(unsigned char *bits);
 int add_constant(int last_round[], int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
-uint8_t shift_rows(uint8_t *matrix);
+unsigned char shift_rows(unsigned char matrix[]);
 int *mix_col(unsigned char last_output[]);
 void print_stuff(unsigned char *data);
 void dec_to_bin(int dec, unsigned int binary[]);
@@ -48,7 +48,8 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *output = c;
 
     // subCells(plain_text);
-    mix_col(plain_text);
+    // mix_col(plain_text);
+    shift_rows(plain_text);
     // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
     // debug();
 }
@@ -146,17 +147,36 @@ int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned c
     return -1;
 }
 
-uint8_t shift_rows(uint8_t *matrix)
+unsigned char shift_rows(unsigned char matrix[])
 {
     /**
      * Written by Henriikka
      *
      */
-
+    // Debug stuff
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    for (int i = 0; i < 16; i++)
+    {
+        printf("Index: %d, %x \n", i, matrix[i]);
+    }
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    // Debug stuff
     // Rotate cells to match P in paper (ShiftRows)
-    uint8_t shifted = {matrix[0], matrix[1], matrix[2], matrix[3], matrix[7], matrix[4], matrix[5], matrix[6], matrix[10],
-                       matrix[11], matrix[8], matrix[9], matrix[13], matrix[14], matrix[15], matrix[12]};
+    unsigned char shifted[] = {matrix[0], matrix[1], matrix[2], matrix[3], matrix[7], matrix[4], matrix[5], matrix[6], matrix[10],
+                               matrix[11], matrix[8], matrix[9], matrix[13], matrix[14], matrix[15], matrix[12]};
 
+    for (int i = 0; i < 16; i++)
+    {
+        printf("Index: %d, %x \n", i, shifted[i]);
+    }
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
+    printf("-----------------------\n");
     return shifted;
 }
 
@@ -189,7 +209,7 @@ int *mix_col(unsigned char last_output[])
                            1, 0, 0, 0,
                            0, 1, 1, 0,
                            1, 0, 1, 0};
-    
+
     printf("%x --- %x --- %x \n", last_output[0], last_output[1], last_output[3]);
 
     int new_array[16] = {
