@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "skinny.h"
+#include <string.h>
+#include <math.h>
 
 // Algorithm Func
 unsigned char *subCells(unsigned char *bits);
@@ -12,7 +14,10 @@ unsigned char mix_col(unsigned char last_output[]);
 
 // Utility Func
 void dec_to_bin(int dec, unsigned int binary[]);
+void bin_2_hex(unsigned int bits[], unsigned char hex[]);
+unsigned char hex_converter(unsigned int val);
 void debug();
+
 /**
  *  Skinny Round Constants in Hexadecimal
  *  From Table 2
@@ -54,8 +59,8 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *output = c;
 
     subCells(plain_text);
-    mix_col(plain_text);
-    shift_rows(plain_text);
+    // mix_col(plain_text);
+    // shift_rows(plain_text);
     // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
     // debug();
 }
@@ -80,7 +85,7 @@ unsigned char *subCells(unsigned char *plain_text)
         printf("Original bits, before the loop start \n");
         for (int i = 0; i < 8; i++)
         {
-            printf("Index: %d, %x \n", i + 1, bits[i]);
+            printf("Index: %d, %u \n", i + 1, bits[i]);
         }
         printf("-------------\n");
         printf("-------------\n");
@@ -89,8 +94,28 @@ unsigned char *subCells(unsigned char *plain_text)
         for (int i = 0; i < 4; i++)
         {
             // this result is weird i think. I am not sure.
-            bits[4] = bits[4] ^ ~(bits[7] | bits[6]);
-            bits[0] = bits[0] ^ ~(bits[3] | bits[2]);
+            unsigned int x = bits[7] | bits[6];
+            if (x == 0)
+            {
+                x = 1;
+            }
+            else
+            {
+                x = 0;
+            }
+            bits[4] = bits[4] ^ x;
+
+            // compliment wasnt working !
+            x = bits[3] | bits[2];
+            if (x == 0)
+            {
+                x = 1;
+            }
+            else
+            {
+                x = 0;
+            }
+            bits[0] = bits[0] ^ x;
             // this result is weird i think. I am not sure.
 
             if (i < 3)
@@ -117,10 +142,13 @@ unsigned char *subCells(unsigned char *plain_text)
         printf("Final Result \n");
         for (int i = 0; i < 8; i++)
         {
-            printf("Index: %d, %d \n", i + 1, bits[i]);
+            printf("Index: %d, %u \n", i + 1, bits[i]);
         }
         printf("-------------\n");
         printf("-------------\n");
+        unsigned char hex[2];
+        bin_2_hex(bits, hex); // I have to store this output somewhere
+        printf("Hex[2]: %x%x \n", hex[0], hex[1]);
     }
     // TODO: need to fix this return statement.
     return 0xdf;
@@ -255,6 +283,12 @@ unsigned char mix_col(unsigned char last_output[])
     return new_array;
 }
 
+/**
+ * ---------------------
+ * Utility Stuff
+ * ---------------------
+ */
+
 void dec_to_bin(int dec, unsigned int binary[])
 {
     /**
@@ -291,6 +325,49 @@ void dec_to_bin(int dec, unsigned int binary[])
         printf("%d", binary[i]);
     }
     printf("\n$$$$$$$$$\n");
+}
+
+void bin_2_hex(unsigned int bits[], unsigned char hex[])
+{
+    /**
+     * Convert the binary to hexadecimal.
+     * Code in crude format.
+     */
+    unsigned int hex_1 = bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
+    unsigned int hex_2 = bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3);
+
+    hex[0] = hex_converter(hex_1);
+    hex[1] = hex_converter(hex_2);
+}
+
+unsigned char hex_converter(unsigned int val)
+{
+    /**
+     * simple dec to hex converter from (10 - 15) to (0xA - 0xF)
+     */
+    switch (val)
+    {
+    case 10:
+        return 0xA;
+        break;
+    case 11:
+        return 0xB;
+        break;
+    case 12:
+        return 0xC;
+        break;
+    case 13:
+        return 0xD;
+        break;
+    case 14:
+        return 0xE;
+        break;
+    case 15:
+        return 0xF;
+        break;
+    default:
+        return val;
+    }
 }
 
 /**
