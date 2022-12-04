@@ -9,8 +9,8 @@ int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned c
 uint8_t shift_rows(uint8_t *matrix);
 int *mix_col(int last_output[]);
 void print_stuff(unsigned char *data);
-void dec_to_bin(int dec, unsigned char binary[]);
-void print_random_stuff(char *data, int length);
+void dec_to_bin(int dec, unsigned int binary[]);
+void print_random_stuff(int data[], int length);
 void debug();
 /**
  *  Skinny Round Constants in Hexadecimal
@@ -48,6 +48,7 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *output = c;
 
     subCells(plain_text);
+    // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
     // debug();
 }
 
@@ -57,59 +58,55 @@ unsigned char *subCells(unsigned char *plain_text)
      * Written by Henriikka
      * Step 1: Run the loop 16 times over the plain-text.
      * Step 2: Convert each byte to binary.
-     *
+     * This function is generating some weird value after bit ops. I think the bit ops are wrong.
      *
      */
     for (int index = 0; index < 16; index++)
     {
-        unsigned char bits[9];
+        unsigned int bits[8];
         dec_to_bin(plain_text[index], bits);
-        // upto this code works. I think! 
+
+        printf("-------------\n");
+        printf("-------------\n");
+        printf("Original bits, before the loop start \n");
+        print_random_stuff(bits, 8);
+        printf("-------------\n");
+        printf("-------------\n");
+
         for (int i = 0; i < 4; i++)
         {
-            unsigned int four = bits[4] - '0';
-            unsigned int seven = bits[7] - '0';
-            unsigned int six = bits[6] - '0';
-
-            four = four ^ ~(seven | six);
-
-            printf("%d \n", four);
-            unsigned int zero = bits[0] - '0';
-            unsigned int three = bits[3] - '0';
-            unsigned int two = bits[2] - '0';
-
-            zero = zero ^ ~(three | two);
-
-            // printf("Index: %d | four: %d || zero: %d\n", index, four, zero);
+            // this result is weird i think. I am not sure.
+            bits[4] = bits[4] ^ ~(bits[7] | bits[6]);
+            bits[0] = bits[0] ^ ~(bits[3] | bits[2]);
+            // this result is weird i think. I am not sure.
 
             if (i < 3)
             {
                 // Bit permutation used for 3 first rounds
-                // char *bit_array = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
-                // for (int j = 0; j < 8; j++)
-                // {
-                //     bits[j] = bit_array[j];
-                // }
-                // print_random_stuff(bits, 8);
-                printf("\n----------------------");
-                printf("\n----------------------");
-                printf("\n----------------------\n");
-                // print_random_stuff(bit_array, 8);
+                unsigned int new_bit[] = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
+                for (int j = 0; j < 8; j++)
+                {
+                    bits[j] = new_bit[j];
+                }
             }
             else
             {
                 // Bit permutation for last round
-                printf("Else");
-                // char *bit_array = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
-                // for (int j = 0; j < 8; j++)
-                // {
-                //     bits[j] = bit_array[j];
-                // }
+                unsigned int new_bit[] = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
+                for (int j = 0; j < 8; j++)
+                {
+                    bits[j] = new_bit[j];
+                }
             }
-            break;
         }
-        break;
+        printf("-------------\n");
+        printf("-------------\n");
+        printf("Final Result \n");
+        print_random_stuff(bits, 8);
+        printf("-------------\n");
+        printf("-------------\n");
     }
+    // TODO: need to fix this return statement.
     return 0xdf;
 }
 
@@ -196,37 +193,42 @@ int *mix_col(int last_output[])
     return new_array;
 }
 
-void dec_to_bin(int dec, unsigned char binary[])
+void dec_to_bin(int dec, unsigned int binary[])
 {
     /**
      * convert decimals to binary for bitwise ops.
      * :returns char [8]
+     * question:
+     * how to return AN ARRAY.
      */
-    char mid_val[] = {'0', '0', '0', '0', '0', '0', '0', '0', '0'};
-    char reverse[] = {'0', '0', '0', '0', '0', '0', '0', '0', '0'};
+    printf("$$$$$$$$$\ndecimal to convert: %d\n", dec);
+    // unsigned int binary[8];
+    int mid_val[] = {0, 0, 0, 0, 0, 0, 0, 0};
+    int reverse[] = {0, 0, 0, 0, 0, 0, 0, 0};
     for (int index = 0; dec > 0; index++)
     {
-        mid_val[index] = (dec % 2) + '0';
+        // mid_val[index] = (dec % 2) + '0';
+        mid_val[index] = (dec % 2);
         dec = dec / 2;
     }
 
     // reverse the order of bin in the bin array.
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 8; i++)
     {
-        reverse[9 - 1 - i] = mid_val[i];
+        reverse[8 - 1 - i] = mid_val[i];
     }
 
     // put everything inside the original pointer
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 8; i++)
     {
         binary[i] = reverse[i];
     }
 
-    // for (int i = 0; i < 8; i++)
-    // {
-    //     printf("%c ", binary[i]);
-    // }
-    // printf("\n");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%d", binary[i]);
+    }
+    printf("\n$$$$$$$$$\n");
 }
 
 /**
@@ -235,11 +237,11 @@ void dec_to_bin(int dec, unsigned char binary[])
  * ---------------------
  */
 
-void print_random_stuff(char *data, int length)
+void print_random_stuff(int data[], int length)
 {
     for (int i = 0; i < length; i++)
     {
-        printf("Index: %d, %x \n", i + 1, data[i]);
+        printf("Index: %d, %x \n", i, data[i]);
     }
     printf("\n");
 }
