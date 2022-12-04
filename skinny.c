@@ -35,6 +35,11 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     /**
      * SKINNY-128-384 block cipher encryption.
      * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
+     * -----
+     * DEV Comment
+     * TODO: I have to learn how to pass results from one func to another, pointer or array?
+     * What's the difference.
+     * how and what to do with the output pointer? How to utilize it.
      */
     // unsigned char x = 0x8;
     // int y = (int)x;
@@ -62,7 +67,7 @@ unsigned char *subCells(unsigned char *plain_text)
      * Step 1: Run the loop 16 times over the plain-text.
      * Step 2: Convert each byte to binary.
      * This function is generating some weird value after bit ops. I think the bit ops are wrong.
-     *
+     * TODO: Let Zaki test my calculation for this func.
      */
     for (int index = 0; index < 16; index++)
     {
@@ -125,7 +130,7 @@ int add_constant(int last_round[], int round_number)
 {
     /**
      * Written by Ibtehaz
-     *
+     * TODO: I have to write this function today.
      */
     unsigned char current_round_array;
     if (round_number < 17)
@@ -150,7 +155,7 @@ int add_constant(int last_round[], int round_number)
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k)
 {
     /**
-     *
+     * TODO:
      *
      */
     return -1;
