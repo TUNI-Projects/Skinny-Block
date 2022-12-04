@@ -7,10 +7,9 @@ unsigned char *subCells(unsigned char *bits);
 int add_constant(int last_round[], int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
 unsigned char shift_rows(unsigned char matrix[]);
-int *mix_col(unsigned char last_output[]);
+unsigned char mix_col(unsigned char last_output[]);
 void print_stuff(unsigned char *data);
 void dec_to_bin(int dec, unsigned int binary[]);
-void print_random_stuff(int data[], int length);
 void debug();
 /**
  *  Skinny Round Constants in Hexadecimal
@@ -47,8 +46,8 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *plain_text = p;
     unsigned char *output = c;
 
-    // subCells(plain_text);
-    // mix_col(plain_text);
+    subCells(plain_text);
+    mix_col(plain_text);
     shift_rows(plain_text);
     // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
     // debug();
@@ -68,12 +67,17 @@ unsigned char *subCells(unsigned char *plain_text)
         unsigned int bits[8];
         dec_to_bin(plain_text[index], bits);
 
-        printf("-------------\n");
-        printf("-------------\n");
+        // Debug stuff
+        printf("-----------------------\n");
+        printf("-----------------------\n");
         printf("Original bits, before the loop start \n");
-        print_random_stuff(bits, 8);
+        for (int i = 0; i < 8; i++)
+        {
+            printf("Index: %d, %x \n", i + 1, bits[i]);
+        }
         printf("-------------\n");
         printf("-------------\n");
+        // Debug stuff
 
         for (int i = 0; i < 4; i++)
         {
@@ -104,7 +108,10 @@ unsigned char *subCells(unsigned char *plain_text)
         printf("-------------\n");
         printf("-------------\n");
         printf("Final Result \n");
-        print_random_stuff(bits, 8);
+        for (int i = 0; i < 8; i++)
+        {
+            printf("Index: %d, %d \n", i + 1, bits[i]);
+        }
         printf("-------------\n");
         printf("-------------\n");
     }
@@ -180,7 +187,7 @@ unsigned char shift_rows(unsigned char matrix[])
     return shifted;
 }
 
-int *mix_col(unsigned char last_output[])
+unsigned char mix_col(unsigned char last_output[])
 {
     /**
      * Written by Ibtehaz
@@ -212,7 +219,7 @@ int *mix_col(unsigned char last_output[])
 
     printf("%x --- %x --- %x \n", last_output[0], last_output[1], last_output[3]);
 
-    int new_array[16] = {
+    unsigned char new_array[16] = {
         last_output[0] + last_output[1] + last_output[3],
         last_output[2],
         last_output[0] + last_output[2] + last_output[3],
@@ -232,7 +239,7 @@ int *mix_col(unsigned char last_output[])
 
     for (int i = 0; i < 16; i++)
     {
-        printf("Index: %d, %d \n", i + 1, new_array[i]);
+        printf("Index: %d, %x \n", i + 1, new_array[i]);
     }
     printf("-----------------------\n");
     printf("-----------------------\n");
@@ -284,15 +291,6 @@ void dec_to_bin(int dec, unsigned int binary[])
  * Debug stuff
  * ---------------------
  */
-
-void print_random_stuff(int data[], int length)
-{
-    for (int i = 0; i < length; i++)
-    {
-        printf("Index: %d, %x \n", i, data[i]);
-    }
-    printf("\n");
-}
 
 void print_stuff(unsigned char *data)
 {
