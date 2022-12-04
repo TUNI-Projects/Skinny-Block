@@ -3,12 +3,14 @@
 #include <stdint.h>
 #include "skinny.h"
 
+// Algorithm Func
 unsigned char *subCells(unsigned char *bits);
 int add_constant(int last_round[], int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
 unsigned char shift_rows(unsigned char matrix[]);
 unsigned char mix_col(unsigned char last_output[]);
-void print_stuff(unsigned char *data);
+
+// Utility Func
 void dec_to_bin(int dec, unsigned int binary[]);
 void debug();
 /**
@@ -291,18 +293,6 @@ void dec_to_bin(int dec, unsigned int binary[])
  * Debug stuff
  * ---------------------
  */
-
-void print_stuff(unsigned char *data)
-{
-    /**
-     * Function to print random stuff
-     */
-    for (int i = 0; i < 16; i++)
-    {
-        printf("Index: %d, %x \n", i + 1, data[i]);
-    }
-    printf("\n");
-}
 
 void debug()
 {
