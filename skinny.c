@@ -57,7 +57,14 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     // dec_to_bin(y, z);
 
     unsigned char *key = k;
-    unsigned char *plain_text = p;
+    unsigned char plain_text[16];
+
+    // copy p into plain_text
+    for (int i = 0; i < 16; i++)
+    {
+        plain_text[i] = p[i];
+    }
+
     unsigned char *output = c;
 
     // subCells(plain_text);
@@ -179,57 +186,30 @@ void add_constant(unsigned char *plain_text, int round_number)
     {
         current_round_array = round_1_16;
         index = round_number;
-        printf("1 Index: %d round: %d ", index, round_number + 1);
     }
     else if (round_number < 32)
     {
         current_round_array = round_17_32;
         index = round_number - 16;
-        printf("2 Index: %d round: %d ", index, round_number + 1);
     }
     else if (round_number < 48)
     {
         current_round_array = round_33_48;
         index = round_number - 32;
-        printf("3 Index: %d round: %d ", index, round_number + 1);
     }
     else
     {
         current_round_array = round_49_62;
         index = round_number - 48;
-        printf("4 Index: %d round: %d ", index, round_number + 1);
     }
     unsigned char constant = current_round_array[index];
-    printf("%x \n", constant);
     // -----------------------
     unsigned char c2 = 0x2;
 
     unsigned int c1_c0[8];
     dec_to_bin(constant, c1_c0);
-    for (int i = 0; i < 8; i++)
-    {
-        printf("%u ", c1_c0[i]);
-    }
-    printf("\n");
-    // works up to this.
     unsigned int c0[] = {0, 0, 0, 0, c1_c0[7 - 3], c1_c0[7 - 2], c1_c0[7 - 1], c1_c0[7 - 0]};
     unsigned int c1[] = {0, 0, 0, 0, 0, 0, c1_c0[7 - 5], c1_c0[7 - 4]};
-
-    printf("c0 --> ");
-    for (int i = 0; i < 8; i++)
-    {
-        printf("%u ", c0[i]);
-    }
-    printf("\n");
-
-    printf("c1 --> ");
-    for (int i = 0; i < 8; i++)
-    {
-        printf("%u ", c1[i]);
-    }
-    printf("\n");
-    printf("\n");
-    // works up to this.
 
     unsigned char c0_hex[2];
     bin_2_hex(c0, c0_hex);
@@ -239,8 +219,26 @@ void add_constant(unsigned char *plain_text, int round_number)
     bin_2_hex(c1, c1_hex);
     int c1_dec = hex_2_dec(c1_hex);
 
-    printf("%d, %d, %d \n", plain_text[0], c0_dec, plain_text[0] + c0_dec);
-    printf("%x, %x, %x \n", plain_text[0], c0_dec, plain_text[0] + c0_dec);
+    printf("c0 --> ");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%u ", c0[i]);
+    }
+    printf(" || dec: %d\n", c0_dec);
+
+    printf("c1 --> ");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%u ", c1[i]);
+    }
+    printf(" || dec: %d\n", c1_dec);
+    printf("c2 --> %d\n", c2);
+
+    printf("0 -> %x, 1 -> %x, 2 -> %x \n", plain_text[0], plain_text[1], plain_text[2]);
+    plain_text[0] = plain_text[0] + c0_dec;
+    plain_text[1] = plain_text[1] + c1_dec;
+    plain_text[2] = plain_text[2] + c2;
+    printf("0 -> %x, 1 -> %x, 2 -> %x \n\n", plain_text[0], plain_text[1], plain_text[2]);
 }
 
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k)
