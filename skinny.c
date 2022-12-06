@@ -15,9 +15,11 @@ unsigned char mix_col(unsigned char last_output[]);
 // Utility Func
 void dec_to_bin(int dec, unsigned int binary[]);
 void bin_2_hex(unsigned int bits[], unsigned char hex[]);
-unsigned char hex_converter(unsigned int val);
+unsigned char hex_converter(int val);
 void debug();
-
+void bin_2_hex_v2(unsigned int bits[]);
+int dec_converter(unsigned char hex_val);
+int hex_2_dec(unsigned char hex[]);
 /**
  *  Skinny Round Constants in Hexadecimal
  *  From Table 2
@@ -153,6 +155,8 @@ unsigned char *subCells(unsigned char *plain_text)
         unsigned char hex[2];
         bin_2_hex(bits, hex); // I have to store this output somewhere
         printf("Hex[2]: %x%x \n", hex[0], hex[1]);
+        int pik = hex_2_dec(hex);
+        printf("%d\n", pik);
     }
     // TODO: need to fix this return statement.
     return 0xdf;
@@ -198,8 +202,7 @@ void add_constant(unsigned char *plain_text, int round_number)
     unsigned char constant = current_round_array[index];
     printf("%x \n", constant);
     // -----------------------
-    unsigned int c2[8];
-    dec_to_bin(0x2, c2);
+    unsigned char c2 = 0x2;
 
     unsigned int c1_c0[8];
     dec_to_bin(constant, c1_c0);
@@ -227,6 +230,17 @@ void add_constant(unsigned char *plain_text, int round_number)
     printf("\n");
     printf("\n");
     // works up to this.
+
+    unsigned char c0_hex[2];
+    bin_2_hex(c0, c0_hex);
+    int c0_dec = hex_2_dec(c0_hex);
+
+    unsigned char c1_hex[2];
+    bin_2_hex(c1, c1_hex);
+    int c1_dec = hex_2_dec(c1_hex);
+
+    printf("%d, %d, %d \n", plain_text[0], c0_dec, plain_text[0] + c0_dec);
+    printf("%x, %x, %x \n", plain_text[0], c0_dec, plain_text[0] + c0_dec);
 }
 
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k)
@@ -382,14 +396,31 @@ void bin_2_hex(unsigned int bits[], unsigned char hex[])
      * Convert the binary to hexadecimal.
      * Code in crude format.
      */
-    unsigned int hex_1 = bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
-    unsigned int hex_2 = bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3);
+    int hex_1 = bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
+    int hex_2 = bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3);
 
     hex[0] = hex_converter(hex_1);
     hex[1] = hex_converter(hex_2);
 }
 
-unsigned char hex_converter(unsigned int val)
+int hex_2_dec(unsigned char hex[])
+{
+    /**
+     * Convert Hex to Decimal !!!
+     */
+    return dec_converter(hex[1]) + dec_converter(hex[0]) * 16;
+}
+
+void bin_2_hex_v2(unsigned int bits[])
+{
+    /**
+     * Convert the binary to hexadecimal.
+     * Code in crude format.
+     */
+    unsigned int dec = bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3) + bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
+}
+
+unsigned char hex_converter(int val)
 {
     /**
      * simple dec to hex converter from (10 - 15) to (0xA - 0xF)
@@ -419,6 +450,36 @@ unsigned char hex_converter(unsigned int val)
     }
 }
 
+int dec_converter(unsigned char hex_val)
+{
+    /**
+     *
+     */
+    switch (hex_val)
+    {
+    case 0xA:
+        return 10;
+        break;
+    case 0xB:
+        return 11;
+        break;
+    case 0xC:
+        return 12;
+        break;
+    case 0xD:
+        return 13;
+        break;
+    case 0xE:
+        return 14;
+        break;
+    case 0xF:
+        return 15;
+        break;
+    default:
+        return hex_val;
+    }
+}
+
 /**
  * ---------------------
  * Debug stuff
@@ -429,8 +490,10 @@ void debug()
 {
     int x = 10;
     char z = '1';
+    unsigned char poi = 0x20;
 
-    printf('%x \n', x); // segmentation fault, why?
+    printf("%x \n", x); // segmentation fault, why?
+    printf("%x \n", poi);
     // because of the single ' instead of "" -_-
     // unsigned char new_hex[2];
 
