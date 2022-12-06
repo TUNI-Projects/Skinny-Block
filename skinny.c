@@ -7,7 +7,7 @@
 
 // Algorithm Func
 unsigned char *subCells(unsigned char *bits);
-int add_constant(int last_round[], int round_number);
+void add_constant(unsigned char *plain_text, int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
 unsigned char shift_rows(unsigned char matrix[]);
 unsigned char mix_col(unsigned char last_output[]);
@@ -58,7 +58,11 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char *plain_text = p;
     unsigned char *output = c;
 
-    subCells(plain_text);
+    // subCells(plain_text);
+    add_constant(plain_text, 16);
+    add_constant(plain_text, 18);
+    add_constant(plain_text, 48);
+    add_constant(plain_text, 60);
     // mix_col(plain_text);
     // shift_rows(plain_text);
     // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
@@ -154,30 +158,58 @@ unsigned char *subCells(unsigned char *plain_text)
     return 0xdf;
 }
 
-int add_constant(int last_round[], int round_number)
+void add_constant(unsigned char *plain_text, int round_number)
 {
     /**
      * Written by Ibtehaz
-     * TODO: I have to write this function today.
+     * in Table-2 round_number is mentioned from 1, instead of usual 0.
+     * So we will decrease round_number by 1.
      */
-    unsigned char current_round_array;
-    if (round_number < 17)
+    // in Table-2 round_number is mentioned from 1, instead of usual 0.
+    //  So we will decrease round_number by 1.
+    //  In the main skinny function, we will also need to start the loop from 1, instead of 0.
+    round_number = round_number - 1;
+    unsigned char *current_round_array = NULL;
+    int index = 0;
+    if (round_number < 16)
     {
         current_round_array = round_1_16;
+        index = round_number;
+        printf("1 Index: %d round: %d ", index, round_number + 1);
     }
-    else if (round_number < 33)
+    else if (round_number < 32)
     {
         current_round_array = round_17_32;
+        index = round_number - 16;
+        printf("2 Index: %d round: %d ", index, round_number + 1);
     }
-    else if (round_number < 49)
+    else if (round_number < 48)
     {
         current_round_array = round_33_48;
+        index = round_number - 32;
+        printf("3 Index: %d round: %d ", index, round_number + 1);
     }
     else
     {
         current_round_array = round_49_62;
+        index = round_number - 48;
+        printf("4 Index: %d round: %d ", index, round_number + 1);
     }
-    return -1;
+    unsigned char constant = current_round_array[index];
+    printf("%x \n", constant);
+    // -----------------------
+    unsigned int c2[8];
+    dec_to_bin(0x2, c2);
+
+    unsigned int c1_c0[8];
+    dec_to_bin(constant, c1_c0);
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%u ", c1_c0[i]);
+    }
+    printf("\n");
+    // works up to this. 
+    
 }
 
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k)
@@ -297,7 +329,7 @@ void dec_to_bin(int dec, unsigned int binary[])
      * question:
      * how to return AN ARRAY.
      */
-    printf("$$$$$$$$$\ndecimal to convert: %d\n", dec);
+    // printf("$$$$$$$$$\ndecimal to convert: %d\n", dec);
     // unsigned int binary[8];
     int mid_val[] = {0, 0, 0, 0, 0, 0, 0, 0};
     int reverse[] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -320,11 +352,11 @@ void dec_to_bin(int dec, unsigned int binary[])
         binary[i] = reverse[i];
     }
 
-    for (int i = 0; i < 8; i++)
-    {
-        printf("%d", binary[i]);
-    }
-    printf("\n$$$$$$$$$\n");
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     printf("%d", binary[i]);
+    // }
+    // printf("\n$$$$$$$$$\n");
 }
 
 void bin_2_hex(unsigned int bits[], unsigned char hex[])
@@ -382,7 +414,7 @@ void debug()
     char z = '1';
 
     printf('%x \n', x); // segmentation fault, why?
-
+    // because of the single ' instead of "" -_-
     // unsigned char new_hex[2];
 
     // strcat(new_hex, hex); <<< this function copy string.
