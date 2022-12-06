@@ -1,12 +1,19 @@
 #! /bin/bash
 
+echo "--------------------"
+echo "-|=|--|=|--|=|--|=|-"
+echo "Skinny Block Cipher"
+echo "--------------------"
+echo "-|=|--|=|--|=|--|=|-"
+
+clear
 make clean
 make
 clear
 ./driver_skinny
 
-echo "@@@@@@@@@@@@@@@@"
-echo "@@@@@@@@@@@@@@@@"
-echo "I am tired of write three commands to run this everytime. Don't mind me."
-echo "@@@@@@@@@@@@@@@@"
-echo "@@@@@@@@@@@@@@@@"
+echo "--------------------"
+echo "-|=|--|=|--|=|--|=|-"
+echo "Skinny Block Cipher"
+echo "--------------------"
+echo "-|=|--|=|--|=|--|=|-"

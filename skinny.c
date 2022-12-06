@@ -67,43 +67,24 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     unsigned char output[16];
 
     subCells(plain_text);
-    // add_constant(plain_text, 16);
-    // add_constant(plain_text, 18);
-    // add_constant(plain_text, 48);
-    // add_constant(plain_text, 60);
-    // mix_col(plain_text);
-    // shift_rows(plain_text);
+    add_constant(plain_text, 16);
+    add_constant(plain_text, 18);
+    add_constant(plain_text, 48);
+    add_constant(plain_text, 60);
+    mix_col(plain_text);
+    shift_rows(plain_text);
 }
 
 void subCells(unsigned char plain_text[])
 {
     /**
      * Written by Henriikka
-     * Step 1: Run the loop 16 times over the plain-text.
-     * Step 2: Convert each byte to binary.
      */
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x | ", plain_text[i]);
-    }
-    printf("\n");
-    printf("\n");
+
     for (int index = 0; index < 16; index++)
     {
         unsigned int bits[8];
         dec_to_bin(plain_text[index], bits);
-
-        // Debug stuff
-        // printf("-----------------------\n");
-        // printf("-----------------------\n");
-        // printf("Original bits, before the loop start \n");
-        // for (int i = 0; i < 8; i++)
-        // {
-        //     printf("Index: %d, %u \n", i + 1, bits[i]);
-        // }
-        // printf("-------------\n");
-        // printf("-------------\n");
-        // Debug stuff
 
         for (int i = 0; i < 4; i++)
         {
@@ -153,14 +134,7 @@ void subCells(unsigned char plain_text[])
         }
         plain_text[index] = bin_2_dec(bits);
     }
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x | ", plain_text[i]);
-    }
-    printf("\n");
-    printf("\n");
-    // TODO: need to fix this return statement.
-    // return 0xdf;
+    // i need to make sure value is persistent inside plain_text.
 }
 
 void add_constant(unsigned char *plain_text, int round_number)
@@ -170,6 +144,7 @@ void add_constant(unsigned char *plain_text, int round_number)
      * in Table-2 round_number is mentioned from 1, instead of usual 0.
      * So we will decrease round_number by 1.
      */
+    
     // in Table-2 round_number is mentioned from 1, instead of usual 0.
     //  So we will decrease round_number by 1.
     //  In the main skinny function, we will also need to start the loop from 1, instead of 0.
@@ -306,8 +281,6 @@ unsigned char mix_col(unsigned char last_output[])
                            1, 0, 0, 0,
                            0, 1, 1, 0,
                            1, 0, 1, 0};
-
-    printf("%x --- %x --- %x \n", last_output[0], last_output[1], last_output[3]);
 
     unsigned char new_array[16] = {
         last_output[0] + last_output[1] + last_output[3],
