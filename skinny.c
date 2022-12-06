@@ -6,7 +6,7 @@
 #include <math.h>
 
 // Algorithm Func
-unsigned char *subCells(unsigned char *bits);
+void subCells(unsigned char plain_text[]);
 void add_constant(unsigned char *plain_text, int round_number);
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
 unsigned char shift_rows(unsigned char matrix[]);
@@ -20,6 +20,7 @@ void debug();
 void bin_2_hex_v2(unsigned int bits[]);
 int dec_converter(unsigned char hex_val);
 int hex_2_dec(unsigned char hex[]);
+int bin_2_dec(unsigned int bits[]);
 
 /**
  *  Skinny Round Constants in Hexadecimal
@@ -62,41 +63,46 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
         key[i] = k[i];
     }
 
+    // this is already properly initialized and I can change this val
     unsigned char output[16];
 
-    // subCells(plain_text);
-    add_constant(plain_text, 16);
-    add_constant(plain_text, 18);
-    add_constant(plain_text, 48);
-    add_constant(plain_text, 60);
+    subCells(plain_text);
+    // add_constant(plain_text, 16);
+    // add_constant(plain_text, 18);
+    // add_constant(plain_text, 48);
+    // add_constant(plain_text, 60);
     // mix_col(plain_text);
     // shift_rows(plain_text);
 }
 
-unsigned char *subCells(unsigned char *plain_text)
+void subCells(unsigned char plain_text[])
 {
     /**
      * Written by Henriikka
      * Step 1: Run the loop 16 times over the plain-text.
      * Step 2: Convert each byte to binary.
-     * This function is generating some weird value after bit ops. I think the bit ops are wrong.
-     * TODO: Let Zaki test my calculation for this func.
      */
+    for (int i = 0; i < 16; i++)
+    {
+        printf("%x | ", plain_text[i]);
+    }
+    printf("\n");
+    printf("\n");
     for (int index = 0; index < 16; index++)
     {
         unsigned int bits[8];
         dec_to_bin(plain_text[index], bits);
 
         // Debug stuff
-        printf("-----------------------\n");
-        printf("-----------------------\n");
-        printf("Original bits, before the loop start \n");
-        for (int i = 0; i < 8; i++)
-        {
-            printf("Index: %d, %u \n", i + 1, bits[i]);
-        }
-        printf("-------------\n");
-        printf("-------------\n");
+        // printf("-----------------------\n");
+        // printf("-----------------------\n");
+        // printf("Original bits, before the loop start \n");
+        // for (int i = 0; i < 8; i++)
+        // {
+        //     printf("Index: %d, %u \n", i + 1, bits[i]);
+        // }
+        // printf("-------------\n");
+        // printf("-------------\n");
         // Debug stuff
 
         for (int i = 0; i < 4; i++)
@@ -145,23 +151,16 @@ unsigned char *subCells(unsigned char *plain_text)
                 }
             }
         }
-        printf("-------------\n");
-        printf("-------------\n");
-        printf("Final Result \n");
-        for (int i = 0; i < 8; i++)
-        {
-            printf("Index: %d, %u \n", i + 1, bits[i]);
-        }
-        printf("-------------\n");
-        printf("-------------\n");
-        unsigned char hex[2];
-        bin_2_hex(bits, hex); // I have to store this output somewhere
-        printf("Hex[2]: %x%x \n", hex[0], hex[1]);
-        int pik = hex_2_dec(hex);
-        printf("%d\n", pik);
+        plain_text[index] = bin_2_dec(bits);
     }
+    for (int i = 0; i < 16; i++)
+    {
+        printf("%x | ", plain_text[i]);
+    }
+    printf("\n");
+    printf("\n");
     // TODO: need to fix this return statement.
-    return 0xdf;
+    // return 0xdf;
 }
 
 void add_constant(unsigned char *plain_text, int round_number)
@@ -404,13 +403,13 @@ int hex_2_dec(unsigned char hex[])
     return dec_converter(hex[1]) + dec_converter(hex[0]) * 16;
 }
 
-void bin_2_hex_v2(unsigned int bits[])
+int bin_2_dec(unsigned int bits[])
 {
     /**
      * Convert the binary to hexadecimal.
      * Code in crude format.
      */
-    unsigned int dec = bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3) + bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
+    return bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3) + bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
 }
 
 unsigned char hex_converter(int val)
