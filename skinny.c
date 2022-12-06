@@ -20,11 +20,11 @@ void debug();
 void bin_2_hex_v2(unsigned int bits[]);
 int dec_converter(unsigned char hex_val);
 int hex_2_dec(unsigned char hex[]);
+
 /**
  *  Skinny Round Constants in Hexadecimal
  *  From Table 2
  */
-
 static const unsigned char round_1_16[] = {
     0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3E, 0x3D, 0x3B, 0x37, 0x2F, 0x1E, 0x3C, 0x39, 0x33, 0x27, 0x0E};
 
@@ -43,20 +43,11 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
      * SKINNY-128-384 block cipher encryption.
      * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
      * -----
-     * DEV Comment
-     * TODO: I have to learn how to pass results from one func to another, pointer or array?
-     * What's the difference.
-     * how and what to do with the output pointer? How to utilize it.
+     * Dec 06
+     * 1. Add Round Tweakey and Initialization func. I have to write them
+     * 2. How to store the results. :/
      */
-    // unsigned char x = 0x8;
-    // int y = (int)x;
-
-    // printf("%x\n", x);
-    // printf("%d\n", y);
-    // char *z[8]; // i need a pointer to pass;
-    // dec_to_bin(y, z);
-
-    unsigned char *key = k;
+    unsigned char key[48]; // original key.
     unsigned char plain_text[16];
 
     // copy p into plain_text
@@ -65,7 +56,13 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
         plain_text[i] = p[i];
     }
 
-    unsigned char *output = c;
+    // copy key
+    for (int i = 0; i < 48; i++)
+    {
+        key[i] = k[i];
+    }
+
+    unsigned char output[16];
 
     // subCells(plain_text);
     add_constant(plain_text, 16);
@@ -74,8 +71,6 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     add_constant(plain_text, 60);
     // mix_col(plain_text);
     // shift_rows(plain_text);
-    // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
-    // debug();
 }
 
 unsigned char *subCells(unsigned char *plain_text)
@@ -483,13 +478,12 @@ int dec_converter(unsigned char hex_val)
  * Debug stuff
  * ---------------------
  */
-
 void debug()
 {
     int x = 10;
     char z = '1';
     unsigned char poi = 0x20;
-
+    // unsigned char x = strtol("10010011", NULL, 2); < converts binary to hex.
     printf("%x \n", x); // segmentation fault, why?
     printf("%x \n", poi);
     // because of the single ' instead of "" -_-
