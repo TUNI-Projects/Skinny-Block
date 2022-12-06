@@ -230,7 +230,6 @@ unsigned char shift_rows(unsigned char matrix[])
 {
     /**
      * Written by Henriikka
-     *
      */
     // Debug stuff
     printf("-----------------\nShift Rows!\n");
@@ -246,6 +245,11 @@ unsigned char shift_rows(unsigned char matrix[])
 
     for (int i = 0; i < 16; i++)
     {
+        // copying to old array
+        matrix[i] = shifted[i];
+    }
+    for (int i = 0; i < 16; i++)
+    {
         printf("%x ", matrix[i]);
     }
     printf("\n\n");
@@ -256,23 +260,13 @@ unsigned char mix_col(unsigned char last_output[])
 {
     /**
      * Written by Ibtehaz
-     * ** comment **
-     * For individual function, I am gonna test it against the original hex value and adding it against the array.
-     * I will do integration testing against the full system later
-     *
-     * This function works with hex summation.
-     * the input has to be unsigned char and output currently is in decimal.
-     * ** comment **
      */
-    // Debug stuff
-
     printf("-----------------\nMix Col!\n");
     for (int i = 0; i < 16; i++)
     {
         printf("%x ", last_output[i]);
     }
     printf("\n");
-    // Debug stuff
 
     int fixed_array[16] = {1, 0, 1, 1,
                            1, 0, 0, 0,
@@ -296,6 +290,12 @@ unsigned char mix_col(unsigned char last_output[])
         last_output[14],
         last_output[14] + last_output[14] + last_output[15],
         last_output[12]};
+
+    for (int i = 0; i < 16; i++)
+    {
+        // copying to old array
+        last_output[i] = new_array[i];
+    }
 
     for (int i = 0; i < 16; i++)
     {
