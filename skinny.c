@@ -208,8 +208,25 @@ void add_constant(unsigned char *plain_text, int round_number)
         printf("%u ", c1_c0[i]);
     }
     printf("\n");
-    // works up to this. 
-    
+    // works up to this.
+    unsigned int c0[] = {0, 0, 0, 0, c1_c0[7 - 3], c1_c0[7 - 2], c1_c0[7 - 1], c1_c0[7 - 0]};
+    unsigned int c1[] = {0, 0, 0, 0, 0, 0, c1_c0[7 - 5], c1_c0[7 - 4]};
+
+    printf("c0 --> ");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%u ", c0[i]);
+    }
+    printf("\n");
+
+    printf("c1 --> ");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%u ", c1[i]);
+    }
+    printf("\n");
+    printf("\n");
+    // works up to this.
 }
 
 int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k)
