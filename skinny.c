@@ -6,9 +6,10 @@
 #include <math.h>
 
 // Algorithm Func
+void initialization(unsigned char plain_text[], unsigned char tweakey[], unsigned char pt1[], unsigned char tk1[], unsigned char tk2[], unsigned char tk3[]);
 void subCells(unsigned char plain_text[]);
 void add_constant(unsigned char *plain_text, int round_number);
-int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k);
+
 unsigned char shift_rows(unsigned char matrix[]);
 unsigned char mix_col(unsigned char last_output[]);
 
@@ -38,30 +39,31 @@ static const unsigned char round_33_48[] = {
 static const unsigned char round_49_62[] = {
     0x09, 0x13, 0x26, 0x0C, 0x19, 0x32, 0x25, 0x0A, 0x15, 0x2A, 0x14, 0x28, 0x10, 0x20};
 
-void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
+void skinny(unsigned char *c,
+            const unsigned char *p,
+            const unsigned char *k)
 {
     /**
      * SKINNY-128-384 block cipher encryption.
-     * Under 48-byte tweakey at k, encrypt 16-byte plaintext at p and store the 16-byte output at c.
+     * Under 48-byte tweakey at k,
+     * encrypt 16-byte plaintext at p
+     * and store the 16-byte output at c.
      * -----
      * Dec 06
      * 1. Add Round Tweakey and Initialization func. I have to write them
      * 2. How to store the results. :/
      */
-    unsigned char key[48]; // original key.
     unsigned char plain_text[16];
+    unsigned char tk1[16];
+    unsigned char tk2[16];
+    unsigned char tk3[16];
+    initialization(p, k, plain_text, tk1, tk2, tk3);
 
-    // copy p into plain_text
-    for (int i = 0; i < 16; i++)
-    {
-        plain_text[i] = p[i];
-    }
-
-    // copy key
-    for (int i = 0; i < 48; i++)
-    {
-        key[i] = k[i];
-    }
+    // // copy p into plain_text
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     plain_text[i] = p[i];
+    // }
 
     // this is already properly initialized and I can change this val
     unsigned char output[16];
@@ -73,6 +75,53 @@ void skinny(unsigned char *c, const unsigned char *p, const unsigned char *k)
     add_constant(plain_text, 60);
     mix_col(plain_text);
     shift_rows(plain_text);
+}
+
+void initialization(unsigned char plain_text[],
+                    unsigned char tweakey[],
+                    unsigned char pt1[],
+                    unsigned char tk1[],
+                    unsigned char tk2[],
+                    unsigned char tk3[])
+{
+    /**
+     * unsigned char plain_text[] - original plain_text array, len 16
+     * unsigned char tweakey[] - original tweakey array, len 48
+     * unsigned char pt1[] - copy of plain_text array len 16
+     * unsigned char tk1[] - copy of tweakey [:16]
+     * unsigned char tk2[] - copy of tweakey [16:32]
+     * unsigned char tk3[] - copy of tweakey [32:]
+     *
+     * it basically initialize the entire enc algo. Nothing special happens here
+     */
+    // copy p into plain_text
+    for (int i = 0; i < 16; i++)
+    {
+        pt1[i] = plain_text[i];
+    }
+
+    // copy tk1
+    for (int i = 0; i < 16; i++)
+    {
+        tk1[i] = tweakey[i];
+    }
+
+    // copy tk2
+    for (int i = 16; i < 32; i++)
+    {
+        tk2[i] = tweakey[i];
+    }
+
+    // copy tk3
+    for (int i = 32; i < 48; i++)
+    {
+        tk3[i] = tweakey[i];
+    }
+}
+
+void add_round_tweakey()
+{
+    return;
 }
 
 void subCells(unsigned char plain_text[])
@@ -215,15 +264,6 @@ void add_constant(unsigned char *plain_text, int round_number)
         printf("%x ", plain_text[i]);
     }
     printf("\n\n");
-}
-
-int add_round_tweakey(unsigned char *c, const unsigned char *p, const unsigned char *k)
-{
-    /**
-     * TODO:
-     *
-     */
-    return -1;
 }
 
 unsigned char shift_rows(unsigned char matrix[])
