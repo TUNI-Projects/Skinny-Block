@@ -237,6 +237,39 @@ void add_round_tweakey(unsigned char IS[],
     last_output[6] = last_output[6] ^ IS[6];
     last_output[7] = last_output[7] ^ IS[7];
 
+    /**
+     * TK's transformation
+     */
+    // Tk1
+    unsigned char temp_tk_1[] = {
+        tk1[9], tk1[15], tk1[8], tk1[13], tk1[10], tk1[14], tk1[12],
+        tk1[11], tk1[0], tk1[1], tk1[2], tk1[3],
+        tk1[4], tk1[5], tk1[6], tk1[7]};
+    for (int i = 0; i < 16; i++)
+    {
+        tk1[i] = temp_tk_1[i];
+    }
+
+    // Tk2
+    unsigned char temp_tk_2[] = {
+        tk2[9], tk2[15], tk2[8], tk2[13], tk2[10], tk2[14], tk2[12],
+        tk2[11], tk2[0], tk2[1], tk2[2], tk2[3],
+        tk2[4], tk2[5], tk2[6], tk2[7]};
+    for (int i = 0; i < 16; i++)
+    {
+        tk2[i] = temp_tk_2[i];
+    }
+
+    // Tk3
+    unsigned char temp_tk_3[] = {
+        tk3[9], tk3[15], tk3[8], tk3[13], tk3[10], tk3[14], tk3[12],
+        tk3[11], tk3[0], tk3[1], tk3[2], tk3[3],
+        tk3[4], tk3[5], tk3[6], tk3[7]};
+    for (int i = 0; i < 16; i++)
+    {
+        tk3[i] = temp_tk_3[i];
+    }
+
     printf("\n\n");
 }
 
