@@ -147,11 +147,22 @@ void skinny(unsigned char *c,
     // this is already properly initialized and I can change this val
     unsigned char output[16];
 
-    subCells(plain_text);
-    add_constant(plain_text, 16);
-    add_round_tweakey(IS, tk1, tk2, tk3, plain_text);
-    // mix_col(plain_text);
-    // shift_rows(plain_text);
+    for (int round = 1; round <= 56; round++)
+    {
+        subCells(plain_text);
+        add_constant(plain_text, round);
+        add_round_tweakey(IS, tk1, tk2, tk3, plain_text);
+        shift_rows(plain_text);
+        mix_col(plain_text);
+    }
+
+    printf("After 56 rounds\n");
+    for (int i = 0; i < 16; i++)
+    {
+        c[i] = plain_text[i];
+        printf("%x", c[i]);
+    }
+    printf("\n");
 }
 
 void initialization(unsigned char plain_text[],
@@ -212,7 +223,7 @@ void add_round_tweakey(unsigned char IS[],
      * xor that array with tk1, store it in the same array.
      * xor that array with IS, store in IS.
      */
-    printf("-----------------\nAdd Round Tweakey!\n");
+    // printf("-----------------\nAdd Round Tweakey!\n");
 
     for (int index = 0; index < 16; index++)
     {
@@ -313,12 +324,12 @@ void subCells(unsigned char plain_text[])
      * Written by Henriikka
      */
 
-    printf("-----------------\nSubCells!\n");
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", plain_text[i]);
-    }
-    printf("\n");
+    // printf("-----------------\nSubCells!\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", plain_text[i]);
+    // }
+    // printf("\n");
 
     for (int index = 0; index < 16; index++)
     {
@@ -374,11 +385,11 @@ void subCells(unsigned char plain_text[])
         plain_text[index] = bin_2_dec(bits);
     }
     // i need to make sure value is persistent inside plain_text.
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", plain_text[i]);
-    }
-    printf("\n\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", plain_text[i]);
+    // }
+    // printf("\n\n");
 }
 
 void add_constant(unsigned char *plain_text, int round_number)
@@ -392,12 +403,12 @@ void add_constant(unsigned char *plain_text, int round_number)
     // in Table-2 round_number is mentioned from 1, instead of usual 0.
     //  So we will decrease round_number by 1.
     //  In the main skinny function, we will also need to start the loop from 1, instead of 0.
-    printf("-----------------\nAdd Constant!\n");
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", plain_text[i]);
-    }
-    printf("\n");
+    // printf("-----------------\nAdd Constant!\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", plain_text[i]);
+    // }
+    // printf("\n");
     round_number = round_number - 1;
     unsigned char *current_round_array = NULL;
     int index = 0;
@@ -442,11 +453,11 @@ void add_constant(unsigned char *plain_text, int round_number)
     plain_text[1] = plain_text[1] + c1_dec;
     plain_text[2] = plain_text[2] + c2;
 
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", plain_text[i]);
-    }
-    printf("\n\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", plain_text[i]);
+    // }
+    // printf("\n\n");
 }
 
 unsigned char shift_rows(unsigned char matrix[])
@@ -455,12 +466,12 @@ unsigned char shift_rows(unsigned char matrix[])
      * Written by Henriikka
      */
     // Debug stuff
-    printf("-----------------\nShift Rows!\n");
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", matrix[i]);
-    }
-    printf("\n");
+    // printf("-----------------\nShift Rows!\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", matrix[i]);
+    // }
+    // printf("\n");
     // Debug stuff
     // Rotate cells to match P in paper (ShiftRows)
     unsigned char shifted[] = {matrix[0], matrix[1], matrix[2], matrix[3], matrix[7], matrix[4], matrix[5], matrix[6], matrix[10],
@@ -471,11 +482,11 @@ unsigned char shift_rows(unsigned char matrix[])
         // copying to old array
         matrix[i] = shifted[i];
     }
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", matrix[i]);
-    }
-    printf("\n\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", matrix[i]);
+    // }
+    // printf("\n\n");
     return shifted;
 }
 
@@ -484,12 +495,12 @@ unsigned char mix_col(unsigned char last_output[])
     /**
      * Written by Ibtehaz
      */
-    printf("-----------------\nMix Col!\n");
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", last_output[i]);
-    }
-    printf("\n");
+    // printf("-----------------\nMix Col!\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", last_output[i]);
+    // }
+    // printf("\n");
 
     int fixed_array[16] = {1, 0, 1, 1,
                            1, 0, 0, 0,
@@ -520,11 +531,11 @@ unsigned char mix_col(unsigned char last_output[])
         last_output[i] = new_array[i];
     }
 
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x ", last_output[i]);
-    }
-    printf("\n\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     printf("%x ", last_output[i]);
+    // }
+    // printf("\n\n");
     return new_array;
 }
 
