@@ -17,7 +17,8 @@ void add_constant(unsigned char *plain_text, int round_number);
 void add_round_tweakey(unsigned char IS[],
                        unsigned char tk1[],
                        unsigned char tk2[],
-                       unsigned char tk3[]);
+                       unsigned char tk3[],
+                       unsigned char last_output[]);
 unsigned char shift_rows(unsigned char matrix[]);
 unsigned char mix_col(unsigned char last_output[]);
 
@@ -145,13 +146,10 @@ void skinny(unsigned char *c,
 
     // this is already properly initialized and I can change this val
     unsigned char output[16];
-    add_round_tweakey(IS, tk1, tk2, tk3);
 
-    // subCells(plain_text);
-    // add_constant(plain_text, 16);
-    // add_constant(plain_text, 18);
-    // add_constant(plain_text, 48);
-    // add_constant(plain_text, 60);
+    subCells(plain_text);
+    add_constant(plain_text, 16);
+    add_round_tweakey(IS, tk1, tk2, tk3, plain_text);
     // mix_col(plain_text);
     // shift_rows(plain_text);
 }
@@ -201,7 +199,8 @@ void initialization(unsigned char plain_text[],
 void add_round_tweakey(unsigned char IS[],
                        unsigned char tk1[],
                        unsigned char tk2[],
-                       unsigned char tk3[])
+                       unsigned char tk3[],
+                       unsigned char last_output[])
 {
     /**
      * Add Round Tweakey Func.
@@ -223,22 +222,20 @@ void add_round_tweakey(unsigned char IS[],
         IS[index] = tk_2_3;
     }
     /**
-     * Do something with this variables
+     * XOR m0, m1, m2, m3 with output_from_last_step row 1.
      */
-    unsigned char m0 = IS[0];
-    unsigned char m1 = IS[1];
-    unsigned char m2 = IS[2];
-    unsigned char m3 = IS[3];
+    last_output[0] = last_output[0] ^ IS[0];
+    last_output[1] = last_output[1] ^ IS[1];
+    last_output[2] = last_output[2] ^ IS[2];
+    last_output[3] = last_output[3] ^ IS[3];
+
     /**
-     *XOR m0, m1, m2, m3 with output_from_last_step row 1.
+     * XOR m4, m5, m6, m7 with output_from_last_step row 2.
      */
-    unsigned char m4 = IS[4];
-    unsigned char m5 = IS[5];
-    unsigned char m6 = IS[6];
-    unsigned char m7 = IS[7];
-    /**
-     *XOR m4, m5, m6, m7 with output_from_last_step row 2.
-     */
+    last_output[4] = last_output[4] ^ IS[4];
+    last_output[5] = last_output[5] ^ IS[5];
+    last_output[6] = last_output[6] ^ IS[6];
+    last_output[7] = last_output[7] ^ IS[7];
 
     printf("\n\n");
 }
