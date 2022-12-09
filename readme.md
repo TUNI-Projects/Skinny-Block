@@ -13,8 +13,8 @@ This codebase only implemented encryption from section:2.3 - The Tweakable Block
 
 ### Additional Contributors
 
-* Zakaria Madaoui (Zakaria.Madaoui@tuni.fi) (debugged multiple function)
 * Several Stackoverflow & reddit q/a posts and answers.
+* dec_to_bin functions has been copied from the internet, some modification was added.
 
 ## Code base Rule
 
