@@ -6,10 +6,18 @@
 #include <math.h>
 
 // Algorithm Func
-void initialization(unsigned char plain_text[], unsigned char tweakey[], unsigned char pt1[], unsigned char tk1[], unsigned char tk2[], unsigned char tk3[]);
+void initialization(unsigned char plain_text[],
+                    unsigned char tweakey[],
+                    unsigned char pt1[],
+                    unsigned char tk1[],
+                    unsigned char tk2[],
+                    unsigned char tk3[]);
 void subCells(unsigned char plain_text[]);
 void add_constant(unsigned char *plain_text, int round_number);
-
+void add_round_tweakey(unsigned char IS[],
+                       unsigned char tk1[],
+                       unsigned char tk2[],
+                       unsigned char tk3[]);
 unsigned char shift_rows(unsigned char matrix[]);
 unsigned char mix_col(unsigned char last_output[]);
 
@@ -53,28 +61,99 @@ void skinny(unsigned char *c,
      * 1. Add Round Tweakey and Initialization func. I have to write them
      * 2. How to store the results. :/
      */
-    unsigned char plain_text[16];
-    unsigned char tk1[16];
-    unsigned char tk2[16];
-    unsigned char tk3[16];
-    initialization(p, k, plain_text, tk1, tk2, tk3);
+    unsigned char IS[] = {
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+    };
+    unsigned char tk1[] = {
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+    };
+    unsigned char tk2[] = {
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+    };
+    unsigned char tk3[] = {
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+    };
+    initialization(p, k, IS, tk1, tk2, tk3);
 
-    // // copy p into plain_text
-    // for (int i = 0; i < 16; i++)
-    // {
-    //     plain_text[i] = p[i];
-    // }
+    unsigned char plain_text[16];
+    // copy p into plain_text, use this variable in everywhere else
+    // except add_round_tweakey step.
+    for (int i = 0; i < 16; i++)
+    {
+        plain_text[i] = p[i];
+    }
 
     // this is already properly initialized and I can change this val
     unsigned char output[16];
+    add_round_tweakey(IS, tk1, tk2, tk3);
 
-    subCells(plain_text);
-    add_constant(plain_text, 16);
-    add_constant(plain_text, 18);
-    add_constant(plain_text, 48);
-    add_constant(plain_text, 60);
-    mix_col(plain_text);
-    shift_rows(plain_text);
+    // subCells(plain_text);
+    // add_constant(plain_text, 16);
+    // add_constant(plain_text, 18);
+    // add_constant(plain_text, 48);
+    // add_constant(plain_text, 60);
+    // mix_col(plain_text);
+    // shift_rows(plain_text);
 }
 
 void initialization(unsigned char plain_text[],
@@ -109,19 +188,59 @@ void initialization(unsigned char plain_text[],
     // copy tk2
     for (int i = 16; i < 32; i++)
     {
-        tk2[i] = tweakey[i];
+        tk2[i - 16] = tweakey[i];
     }
 
     // copy tk3
     for (int i = 32; i < 48; i++)
     {
-        tk3[i] = tweakey[i];
+        tk3[i - 32] = tweakey[i];
     }
 }
 
-void add_round_tweakey()
+void add_round_tweakey(unsigned char IS[],
+                       unsigned char tk1[],
+                       unsigned char tk2[],
+                       unsigned char tk3[])
 {
-    return;
+    /**
+     * Add Round Tweakey Func.
+     * IS = IS from documentation. This value will rotate in every step of the way
+     */
+    // Step 1: Giant XOR. IS = IS xor TK1 xor TK2 xor Tk3.
+    /**
+     * First xor tk2 and tk3 store the result in a separate array.
+     * xor that array with tk1, store it in the same array.
+     * xor that array with IS, store in IS.
+     */
+    printf("-----------------\nAdd Round Tweakey!\n");
+
+    for (int index = 0; index < 16; index++)
+    {
+        unsigned char tk_2_3 = tk2[index] ^ tk3[index];
+        tk_2_3 = tk_2_3 ^ tk1[index];
+        tk_2_3 = tk_2_3 ^ IS[index];
+        IS[index] = tk_2_3;
+    }
+    /**
+     * Do something with this variables
+     */
+    unsigned char m0 = IS[0];
+    unsigned char m1 = IS[1];
+    unsigned char m2 = IS[2];
+    unsigned char m3 = IS[3];
+    /**
+     *XOR m0, m1, m2, m3 with output_from_last_step row 1.
+     */
+    unsigned char m4 = IS[4];
+    unsigned char m5 = IS[5];
+    unsigned char m6 = IS[6];
+    unsigned char m7 = IS[7];
+    /**
+     *XOR m4, m5, m6, m7 with output_from_last_step row 2.
+     */
+
+    printf("\n\n");
 }
 
 void subCells(unsigned char plain_text[])
