@@ -13,7 +13,7 @@ This codebase only implemented encryption from section:2.3 - The Tweakable Block
 
 ### Additional Contributors
 
-* Zaki (debugged multiple function)
+* Zakaria Madaoui (Zakaria.Madaoui@tuni.fi) (debugged multiple function)
 * Several Stackoverflow & reddit q/a posts and answers.
 
 ## Code base Rule

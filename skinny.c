@@ -19,8 +19,8 @@ void add_round_tweakey(unsigned char IS[],
                        unsigned char tk2[],
                        unsigned char tk3[],
                        unsigned char last_output[]);
-unsigned char shift_rows(unsigned char matrix[]);
-unsigned char mix_col(unsigned char last_output[]);
+void shift_rows(unsigned char matrix[]);
+void mix_col(unsigned char last_output[]);
 
 // Utility Func
 void dec_to_bin(int dec, unsigned int binary[]);
@@ -460,7 +460,7 @@ void add_constant(unsigned char *plain_text, int round_number)
     // printf("\n\n");
 }
 
-unsigned char shift_rows(unsigned char matrix[])
+void shift_rows(unsigned char matrix[])
 {
     /**
      * Written by Henriikka
@@ -487,10 +487,9 @@ unsigned char shift_rows(unsigned char matrix[])
     //     printf("%x ", matrix[i]);
     // }
     // printf("\n\n");
-    return shifted;
 }
 
-unsigned char mix_col(unsigned char last_output[])
+void mix_col(unsigned char last_output[])
 {
     /**
      * Written by Ibtehaz
@@ -536,7 +535,6 @@ unsigned char mix_col(unsigned char last_output[])
     //     printf("%x ", last_output[i]);
     // }
     // printf("\n\n");
-    return new_array;
 }
 
 /**
