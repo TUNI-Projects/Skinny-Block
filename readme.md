@@ -2,10 +2,19 @@
 
 Cryptography 1 (COMP.SEC.200)
 
+Details of Skinny Block Cipher: <https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/round-2/spec-doc-rnd2/SKINNY-spec-round2.pdf>.
+
+This codebase only implemented encryption from section:2.3 - The Tweakable Block Ciphers SKINNY-128-256 and SKINNY-128-384.
+
 ## Project Members
 
 * Mohammad Asif Ibtehaz (asif.ibtehaz@tuni.fi) (50366228)
 * Henriikka Rikala (henriikka.rikala@tuni.fi) (292055)
+
+### Additional Contributors
+
+* Zaki (debugged multiple function)
+* Several Stackoverflow & reddit q/a posts and answers.
 
 ## Code base Rule
 
@@ -50,11 +59,14 @@ make
 ./driver_skinny
 ```
 
-or there's a `.sh` file in the root directory, give it an execute permission (+x) and then run it. That's a bash file that basically run the above command serially.
+<b>OR</b>
+
+there's a `.sh` file in the root directory, give it an execute permission (+x) and then run it. That's a bash file that basically run the above command serially.
 
 ```bash
+chmod +x run.sh
 ./run.sh
 ```
 
 ------
-Kiitos, hyva paivanjatkoa! :)
+Kiitos, hyvaa paivanjatkoa! :)
