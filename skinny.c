@@ -270,7 +270,41 @@ void add_round_tweakey(unsigned char IS[],
         tk3[i] = temp_tk_3[i];
     }
 
-    printf("\n\n");
+    /**
+     * First and Second Row of TK2 and TK3 will get an LFSR :)
+     * 0 1 2 3
+     * 4 5 6 7
+     * TK2 and TK3 will have different technique.
+     */
+    for (int i = 0; i < 8; i++)
+    {
+        // TK2 operation
+        unsigned int tk2_bits[8];
+        unsigned int new_tk2_bits[8];
+        dec_to_bin(tk2[i], tk2_bits);
+
+        new_tk2_bits[0] = tk2_bits[7] ^ tk2_bits[5];
+        for (int j = 1; j < 8; j++)
+        {
+            new_tk2_bits[j] = tk2_bits[j - 1];
+        }
+        tk2[i] = bin_2_dec(new_tk2_bits);
+
+        // TK3 operation
+
+        unsigned int tk3_bits[8];
+        unsigned int new_tk3_bits[8];
+        dec_to_bin(tk3[i], tk3_bits);
+
+        new_tk3_bits[7] = tk3_bits[0] ^ tk3_bits[6];
+        for (int j = 0; j < 7; j++)
+        {
+            new_tk3_bits[j] = tk3_bits[j + 1];
+        }
+        tk3[i] = bin_2_dec(new_tk3_bits);
+    }
+    // done
+    return;
 }
 
 void subCells(unsigned char plain_text[])
