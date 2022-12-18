@@ -156,10 +156,13 @@ void skinny(unsigned char *c,
         mix_col(plain_text);
     }
 
-    for (int i = 0; i < 16; i++)
-    {
-        c[i] = plain_text[i];
-    }
+    // printf("After 56!\n");
+    // for (int i = 0; i < 16; i++)
+    // {
+    //     c[i] = plain_text[i];
+    //     printf("%x", c[i]);
+    // }
+    // printf("\n");
 }
 
 void initialization(unsigned char plain_text[],
@@ -320,14 +323,6 @@ void subCells(unsigned char plain_text[])
     /**
      * Written by Henriikka
      */
-
-    // printf("-----------------\nSubCells!\n");
-    // for (int i = 0; i < 16; i++)
-    // {
-    //     printf("%x ", plain_text[i]);
-    // }
-    // printf("\n");
-
     for (int index = 0; index < 16; index++)
     {
         unsigned int bits[8];
@@ -384,7 +379,7 @@ void subCells(unsigned char plain_text[])
     // i need to make sure value is persistent inside plain_text.
     // for (int i = 0; i < 16; i++)
     // {
-    //     printf("%x ", plain_text[i]);
+    //     printf("%x", plain_text[i]);
     // }
     // printf("\n\n");
 }
@@ -548,14 +543,14 @@ void dec_to_bin(int dec, unsigned int binary[])
      * question:
      * how to return AN ARRAY.
      */
-    printf("$$$$$$$$$\ndecimal to convert: %d\n", dec);
+    // printf("$$$$$$$$$\ndecimal to convert: %d\n", dec);
     // unsigned int binary[8];
     int mid_val[] = {0, 0, 0, 0, 0, 0, 0, 0};
     int reverse[] = {0, 0, 0, 0, 0, 0, 0, 0};
     for (int index = 0; dec > 0; index++)
     {
         // mid_val[index] = (dec % 2) + '0';
-        mid_val[index] = (dec % 2);
+        binary[index] = (dec % 2);
         dec = dec / 2;
     }
 
@@ -566,16 +561,16 @@ void dec_to_bin(int dec, unsigned int binary[])
     // }
 
     // put everything inside the original pointer
-    for (int i = 0; i < 8; i++)
-    {
-        binary[i] = mid_val[i];
-    }
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     binary[i] = mid_val[i];
+    // }
 
-    for (int i = 0; i < 8; i++)
-    {
-        printf("%d", binary[i]);
-    }
-    printf("\n$$$$$$$$$\n");
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     printf("%d", binary[i]);
+    // }
+    // printf("\n$$$$$$$$$\n");
 }
 
 void bin_2_hex(unsigned int bits[], unsigned char hex[])
@@ -584,8 +579,8 @@ void bin_2_hex(unsigned int bits[], unsigned char hex[])
      * Convert the binary to hexadecimal.
      * Code in crude format.
      */
-    int hex_1 = bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
-    int hex_2 = bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3);
+    int hex_1 = bits[3] * pow(2, 3) + bits[2] * pow(2, 2) + bits[1] * pow(2, 1) + bits[0] * pow(2, 0);
+    int hex_2 = bits[7] * pow(2, 3) + bits[6] * pow(2, 2) + bits[5] * pow(2, 1) + bits[4] * pow(2, 0);
 
     hex[0] = hex_converter(hex_1);
     hex[1] = hex_converter(hex_2);
@@ -602,10 +597,10 @@ int hex_2_dec(unsigned char hex[])
 int bin_2_dec(unsigned int bits[])
 {
     /**
-     * Convert the binary to hexadecimal.
+     * Convert the binary to DECIMAL!.
      * Code in crude format.
      */
-    return bits[7] * pow(2, 0) + bits[6] * pow(2, 1) + bits[5] * pow(2, 2) + bits[4] * pow(2, 3) + bits[3] * pow(2, 0) + bits[2] * pow(2, 1) + bits[1] * pow(2, 2) + bits[0] * pow(2, 3);
+    return bits[0] * pow(2, 0) + bits[1] * pow(2, 1) + bits[2] * pow(2, 2) + bits[3] * pow(2, 3) + bits[4] * pow(2, 4) + bits[5] * pow(2, 5) + bits[6] * pow(2, 6) + bits[7] * pow(2, 7);
 }
 
 unsigned char hex_converter(int val)

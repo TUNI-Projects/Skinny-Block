@@ -52,13 +52,5 @@ int main(int argc, char *argv[])
         printf("%s\n", !memcmp(c, p + 64, 16) ? "PASS" : "FAIL");
         p += 80;
     }
-
-    printf("After 56 rounds\n");
-    for (int i = 0; i < 16; i++)
-    {
-        printf("%x", c[i]);
-    }
-    printf("\n");
-
     return 0;
 }
