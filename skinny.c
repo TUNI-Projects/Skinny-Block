@@ -156,13 +156,10 @@ void skinny(unsigned char *c,
         mix_col(plain_text);
     }
 
-    printf("After 56 rounds\n");
     for (int i = 0; i < 16; i++)
     {
         c[i] = plain_text[i];
-        printf("%x", c[i]);
     }
-    printf("\n");
 }
 
 void initialization(unsigned char plain_text[],
@@ -366,7 +363,7 @@ void subCells(unsigned char plain_text[])
             if (i < 3)
             {
                 // Bit permutation used for 3 first rounds
-                unsigned int new_bit[] = {bits[2], bits[1], bits[7], bits[6], bits[4], bits[0], bits[3], bits[5]};
+                unsigned int new_bit[] = {bits[5], bits[3], bits[0], bits[4], bits[6], bits[7], bits[1], bits[2]};
                 for (int j = 0; j < 8; j++)
                 {
                     bits[j] = new_bit[j];
@@ -375,7 +372,7 @@ void subCells(unsigned char plain_text[])
             else
             {
                 // Bit permutation for last round
-                unsigned int new_bit[] = {bits[7], bits[6], bits[5], bits[4], bits[3], bits[1], bits[2], bits[0]};
+                unsigned int new_bit[] = {bits[0], bits[2], bits[1], bits[3], bits[4], bits[5], bits[6], bits[7]};
                 for (int j = 0; j < 8; j++)
                 {
                     bits[j] = new_bit[j];
@@ -438,8 +435,8 @@ void add_constant(unsigned char *plain_text, int round_number)
 
     unsigned int c1_c0[8];
     dec_to_bin(constant, c1_c0);
-    unsigned int c0[] = {0, 0, 0, 0, c1_c0[7 - 3], c1_c0[7 - 2], c1_c0[7 - 1], c1_c0[7 - 0]};
-    unsigned int c1[] = {0, 0, 0, 0, 0, 0, c1_c0[7 - 5], c1_c0[7 - 4]};
+    unsigned int c0[] = {c1_c0[7 - 0], c1_c0[7 - 1], c1_c0[7 - 2], c1_c0[7 - 3], 0, 0, 0, 0};
+    unsigned int c1[] = {c1_c0[7 - 4], c1_c0[7 - 5], 0, 0, 0, 0, 0, 0};
 
     unsigned char c0_hex[2];
     bin_2_hex(c0, c0_hex);
@@ -551,7 +548,7 @@ void dec_to_bin(int dec, unsigned int binary[])
      * question:
      * how to return AN ARRAY.
      */
-    // printf("$$$$$$$$$\ndecimal to convert: %d\n", dec);
+    printf("$$$$$$$$$\ndecimal to convert: %d\n", dec);
     // unsigned int binary[8];
     int mid_val[] = {0, 0, 0, 0, 0, 0, 0, 0};
     int reverse[] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -562,23 +559,23 @@ void dec_to_bin(int dec, unsigned int binary[])
         dec = dec / 2;
     }
 
-    // reverse the order of bin in the bin array.
-    for (int i = 0; i < 8; i++)
-    {
-        reverse[8 - 1 - i] = mid_val[i];
-    }
+    // // reverse the order of bin in the bin array.
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     reverse[8 - 1 - i] = mid_val[i];
+    // }
 
     // put everything inside the original pointer
     for (int i = 0; i < 8; i++)
     {
-        binary[i] = reverse[i];
+        binary[i] = mid_val[i];
     }
 
-    // for (int i = 0; i < 8; i++)
-    // {
-    //     printf("%d", binary[i]);
-    // }
-    // printf("\n$$$$$$$$$\n");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%d", binary[i]);
+    }
+    printf("\n$$$$$$$$$\n");
 }
 
 void bin_2_hex(unsigned int bits[], unsigned char hex[])

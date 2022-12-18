@@ -53,5 +53,12 @@ int main(int argc, char *argv[])
         p += 80;
     }
 
+    printf("After 56 rounds\n");
+    for (int i = 0; i < 16; i++)
+    {
+        printf("%x", c[i]);
+    }
+    printf("\n");
+
     return 0;
 }
